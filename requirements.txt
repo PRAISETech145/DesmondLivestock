@@ -9,3 +9,4 @@ gunicorn>=21.2
 locust>=2.15
 psycopg2-binary>=2.9
 Pillow==11.0.0
+whitenoise==6.7.0
