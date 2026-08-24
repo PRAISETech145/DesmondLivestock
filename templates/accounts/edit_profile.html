@@ -3,24 +3,24 @@
 {% block title %}Edit Profile - Livestock Market{% endblock %}
 
 {% block hero %}
-<div class="relative z-10 max-w-6xl mx-auto px-4 py-12 lg:py-16 text-center">
-  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">Edit Profile</h1>
+<div class="relative z-10 max-w-6xl mx-auto px-4 py-8 lg:py-12 text-center">
+  <h1 class="text-2xl lg:text-3xl font-bold text-white mb-2">Edit Profile</h1>
   <p class="text-gray-200 max-w-2xl mx-auto">Update your profile information and avatar.</p>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
-  <div class="bg-white border border-gray-200 rounded-2xl p-6 lg:p-8">
-    <form method="post" enctype="multipart/form-data" class="space-y-6" id="profile-form">
+  <div class="bg-white border border-gray-200 rounded-2xl p-5 lg:p-7">
+    <form method="post" enctype="multipart/form-data" class="space-y-5" id="profile-form">
       {% csrf_token %}
 
       <!-- Current Avatar -->
       <div class="text-center">
         {% if form.instance.avatar %}
-          <img src="{{ form.instance.avatar.url }}" alt="Current avatar" class="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 border-4 border-gray-100">
+          <img src="{{ form.instance.avatar.url }}" alt="Current avatar" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-3 border-3 border-gray-100">
         {% else %}
-          <div class="w-24 h-24 rounded-2xl bg-gray-900 flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4 border-4 border-gray-100">
+          <div class="w-20 h-20 rounded-2xl bg-gray-900 flex items-center justify-center text-white text-3xl font-bold mx-auto mb-3 border-3 border-gray-100">
             {{ form.instance.initials }}
           </div>
         {% endif %}

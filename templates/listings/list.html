@@ -3,14 +3,14 @@
 {% block title %}Browse Livestock{% endblock %}
 
 {% block hero %}
-<div class="relative z-10 max-w-6xl mx-auto px-4 py-12 lg:py-16 text-center">
-  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">Browse Livestock</h1>
+<div class="relative z-10 max-w-6xl mx-auto px-4 py-8 lg:py-12 text-center">
+  <h1 class="text-2xl lg:text-3xl font-bold text-white mb-2">Browse Livestock</h1>
   <p class="text-gray-200 max-w-2xl mx-auto">Find quality cattle, goats, sheep, poultry and more from trusted sellers.</p>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col sm:flex-row gap-4 mb-8 items-start sm:items-center justify-between"
+<div class="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between"
      hx-get="{% url 'listings:list' %}"
      hx-target="#grid"
      hx-push-url="true"
@@ -19,7 +19,7 @@
   <div class="flex-1 w-full sm:w-auto">
     <label for="category-select" class="sr-only">Filter by category</label>
     <select id="category-select" name="category"
-            class="w-full sm:w-64 bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
+            class="w-full sm:w-64 bg-white border border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
       <option value="">All Categories</option>
       {% for c in categories %}
         <option value="{{ c.slug }}" {% if c.slug == selected_category %}selected{% endif %}>{{ c.name }}</option>
@@ -34,15 +34,15 @@
     {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
     <label for="search-input" class="sr-only">Search livestock</label>
     <input type="text" name="q" id="search-input" value="{{ search }}" placeholder="Search livestock..."
-           class="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all">
+           class="flex-1 bg-white border border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all">
     <button type="submit"
-            class="bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors whitespace-nowrap">
+            class="bg-gray-900 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm hover:bg-gray-700 transition-colors whitespace-nowrap">
       Search
     </button>
   </form>
 </div>
 
-<div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
   {% include "listings/_grid.html" %}
 </div>
 

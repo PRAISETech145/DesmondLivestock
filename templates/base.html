@@ -20,25 +20,25 @@
       {% endblock %}
     </div>
 
-    <nav class="relative max-w-6xl mx-auto flex items-center justify-between p-4">
-      <a href="{% url 'core:home' %}" class="text-2xl font-bold tracking-tight">Desmond Animal Production Innovation and Distribution (DAPIAD) </a>
-      <div class="flex items-center gap-4 text-sm">
+    <nav class="relative max-w-6xl mx-auto flex items-center justify-between p-3 lg:p-4">
+      <a href="{% url 'core:home' %}" class="text-xl lg:text-2xl font-bold tracking-tight truncate max-w-[200px] lg:max-w-none">Desmond Animal Production Innovation and Distribution (DAPIAD) </a>
+      <div class="flex items-center gap-2 lg:gap-4 text-sm">
          
         {% if user.is_authenticated %}
           {% if user.is_seller %}
 
-            <a href="{% url 'listings:create' %}" class="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">+ Post Livestock</a>
+            <a href="{% url 'listings:create' %}" class="bg-white text-gray-900 px-3 lg:px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm">+ Post Livestock</a>
           {% endif %}
 
           <!-- Profile dropdown -->
           <div class="relative" id="profile-dropdown">
             <button id="profile-btn"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
+                    class="flex items-center gap-2 lg:gap-3 px-3 lg:px-4 py-2.5 rounded-xl hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
                     aria-expanded="false" aria-haspopup="true">
               {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="w-10 h-10 rounded-full object-cover border-2 border-white/20">
+                <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover border-2 border-white/20">
               {% else %}
-                <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold text-base border-2 border-white/20">
+                <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-bold text-sm lg:text-base border-2 border-white/20">
                   {{ user.initials }}
                 </div>
               {% endif %}
@@ -97,8 +97,8 @@
             </div>
           </div>
         {% else %}
-          <a href="{% url 'accounts:login' %}" class="hover:text-gray-300 transition-colors px-3 py-2 rounded-lg hover:bg-white/10">Login</a>
-          <a href="{% url 'accounts:signup' %}" class="bg-white text-gray-900 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">Sign Up</a>
+          <a href="{% url 'accounts:login' %}" class="hover:text-gray-300 transition-colors px-3 lg:px-4 py-2 rounded-lg hover:bg-white/10 text-sm">Login</a>
+          <a href="{% url 'accounts:signup' %}" class="bg-white text-gray-900 px-3 lg:px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm">Sign Up</a>
         {% endif %}
       </div>
     </nav>

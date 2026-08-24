@@ -47,13 +47,13 @@
 {% endblock %}
 
 {% block hero %}
-<div class="relative z-10 max-w-6xl mx-auto px-4 py-20 lg:py-28 text-center">
-  <h1 class="text-4xl lg:text-5xl font-bold mb-4 text-white">Quality Livestock, Direct From the Source</h1>
-  <p class="text-lg lg:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+<div class="relative z-10 max-w-6xl mx-auto px-4 py-10 lg:py-16 text-center">
+  <h1 class="text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 text-white leading-tight">Quality Livestock, Direct From the Source</h1>
+  <p class="text-base lg:text-lg xl:text-xl text-gray-200 mb-6 max-w-2xl mx-auto leading-relaxed">
     Browse healthy cattle, goats, poultry and more. Create an account to contact sellers directly on WhatsApp.
   </p>
   <a href="{% url 'listings:list' %}"
-     class="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors">
+     class="inline-flex items-center gap-2 bg-white text-gray-900 px-6 lg:px-8 py-3 lg:py-4 rounded-xl font-semibold text-base lg:text-lg hover:bg-gray-100 transition-colors">
     Browse Livestock →
   </a>
 </div>
@@ -282,12 +282,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Categories section with images -->
 <section class="mb-12">
-  <h2 class="text-2xl font-bold text-gray-900 mb-6">Browse by Category</h2>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 md:gap-6">
+  <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-5">Browse by Category</h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
     {% for c in categories %}
     <a href="{% url 'listings:list' %}?category={{ c.slug }}"
        class="group block bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 hover:shadow-xl transition-all duration-300">
-      <div class="relative aspect-[4/3] overflow-hidden">
+      <div class="relative aspect-square overflow-hidden">
         {% if c.name == "Cattle" %}
           <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="Cattle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
         {% elif c.name == "Goats" %}
@@ -300,19 +300,19 @@ document.addEventListener('DOMContentLoaded', function() {
           <img src="{% static 'imgs/animal.jpg' %}" alt="Animal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
         {% else %}
           <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-            <span class="text-5xl">🐄</span>
+            <span class="text-4xl lg:text-5xl">🐄</span>
           </div>
         {% endif %}
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
       </div>
-      <div class="p-6">
-        <h3 class="font-semibold text-xl text-gray-900 text-white group-hover:text-gray-200 transition-colors relative z-10 -mt-12 px-3">
+      <div class="p-4 lg:p-5">
+        <h3 class="font-semibold text-lg lg:text-xl text-white relative z-10 -mt-10 px-2 lg:px-3 truncate">
           {{ c.name }}
         </h3>
       </div>
     </a>
     {% empty %}
-    <p class="col-span-full text-center text-gray-500 py-8">No categories available.</p>
+    <p class="col-span-full text-center text-gray-500 py-6">No categories available.</p>
     {% endfor %}
   </div>
 </section>
