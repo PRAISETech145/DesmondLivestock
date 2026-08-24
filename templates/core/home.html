@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Livestock Market - Quality Livestock Direct From Source{% endblock %}
+
+{% block header_bg %}
+{% if featured %}
+<div id="hero-carousel" tabindex="0" role="region" aria-label="Featured listings carousel" class="relative h-full">
+  <!-- Carousel images -->
+  <div class="absolute inset-0 overflow-hidden">
+    {% for item in featured %}
+    {% if item.first_image %}
+    <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-1000"
+         style="background-image: url('{{ item.first_image.url }}');"
+         data-title="{{ item.title }}"
+         data-category="{{ item.category.name }}"
+         data-price="{{ item.price }}"
+         data-url="{% url 'listings:detail' item.pk %}">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/30"></div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Navigation dots -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2" id="carousel-dots">
+    {% for item in featured %}
+    {% if item.first_image %}
+    <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition-colors"
+            data-index="{{ forloop.counter0 }}"
+            aria-label="Slide {{ forloop.counter }}"></button>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Arrow navigation -->
+  <button id="carousel-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors bg-black/20 backdrop-blur-sm p-2 rounded-full hidden md:flex" aria-label="Previous slide">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+  </button>
+  <button id="carousel-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors bg-black/20 backdrop-blur-sm p-2 rounded-full hidden md:flex" aria-label="Next slide">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+  </button>
+</div>
+{% else %}
+<img src="{% static 'imgs/home.jpg' %}" alt="" class="w-full h-full object-cover opacity-40">
+<div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/30"></div>
+{% endif %}
+{% endblock %}
+
+{% block hero %}
+<div class="relative z-10 max-w-6xl mx-auto px-4 py-20 lg:py-28 text-center">
+  <h1 class="text-4xl lg:text-5xl font-bold mb-4 text-white">Quality Livestock, Direct From the Source</h1>
+  <p class="text-lg lg:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+    Browse healthy cattle, goats, poultry and more. Create an account to contact sellers directly on WhatsApp.
+  </p>
+  <a href="{% url 'listings:list' %}"
+     class="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-colors">
+    Browse Livestock →
+  </a>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.carousel-slide {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.carousel-slide.active {
+  opacity: 1;
+  z-index: 10;
+}
+.carousel-dot.active {
+  background-color: white;
+  transform: scale(1.2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slide {
+    transition: none;
+  }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const carousel = document.getElementById('hero-carousel');
+  if (!carousel) return;
+
+  const slides = carousel.querySelectorAll('.carousel-slide');
+  const dots = carousel.querySelectorAll('.carousel-dot');
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+
+  if (slides.length <= 1) {
+    // Hide navigation if only 0-1 slides
+    prevBtn?.classList.add('hidden');
+    nextBtn?.classList.add('hidden');
+    document.getElementById('carousel-dots')?.classList.add('hidden');
+    return;
+  }
+
+  let currentIndex = 0;
+  let intervalId = null;
+  const INTERVAL_MS = 6000; // 6 seconds
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+    currentIndex = index;
+  }
+
+  function nextSlide() {
+    const next = (currentIndex + 1) % slides.length;
+    showSlide(next);
+  }
+
+  function prevSlide() {
+    const prev = (currentIndex - 1 + slides.length) % slides.length;
+    showSlide(prev);
+  }
+
+  function startAutoPlay() {
+    stopAutoPlay(); // Clear any existing
+    intervalId = setInterval(nextSlide, INTERVAL_MS);
+  }
+
+  function stopAutoPlay() {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = null;
+  }
+
+  function resetAutoPlay() {
+    stopAutoPlay();
+    startAutoPlay();
+  }
+
+  // Event listeners
+  nextBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    nextSlide();
+    resetAutoPlay();
+  });
+
+  prevBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    prevSlide();
+    resetAutoPlay();
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      showSlide(i);
+      resetAutoPlay();
+    });
+  });
+
+  // Pause on hover/focus
+  carousel.addEventListener('mouseenter', stopAutoPlay);
+  carousel.addEventListener('mouseleave', startAutoPlay);
+  carousel.addEventListener('focusin', stopAutoPlay);
+  carousel.addEventListener('focusout', startAutoPlay);
+
+  // Keyboard navigation
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+      resetAutoPlay();
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextSlide();
+      resetAutoPlay();
+    }
+  });
+
+  // Initialize
+  showSlide(0);
+  startAutoPlay();
+
+  // Make carousel focusable for keyboard nav (but don't steal focus from hero content)
+  // Only focus if no other element has focus
+  if (document.activeElement === document.body) {
+    carousel.focus({ preventScroll: true });
+  }
+
+  // Debug: log when slide changes
+  console.log('Hero carousel initialized with', slides.length, 'slides');
+});
+</script>
+{% endblock %}
+
+
+{% block content %}
+<section class="mb-12">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-900">Featured Listings</h2>
+    <a href="{% url 'listings:list' %}" class="text-gray-900 hover:text-gray-700 font-medium text-sm">View all →</a>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for item in featured %}
+<div class="group relative">
+  <a href="{% url 'listings:detail' item.pk %}"
+     class="group-inner block border border-gray-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div class="relative aspect-[4/3] overflow-hidden">
+      {% if item.images_list %}
+        <img src="{{ item.images_list.0.url }}"
+             alt="{{ item.title }}"
+             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+      {% else %}
+        <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+          <span class="text-5xl">🐄</span>
+        </div>
+      {% endif %}
+      <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
+        {{ item.category.name }}
+      </span>
+      {% if item.status != "available" %}
+        <span class="absolute top-3 right-3 bg-red-600 text-white text-xs font-medium px-2 py-1 rounded-full">
+          {{ item.get_status_display }}
+        </span>
+      {% endif %}
+      {% if item.posted_by.is_verified %}
+        <span class="absolute top-3 right-3 flex items-center gap-1 bg-amber-500 text-white text-xs font-medium px-2.5 py-1 rounded-full"
+              title="Verified Seller">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+          Verified
+        </span>
+      {% endif %}
+    </div>
+    <div class="p-5">
+      <h3 class="font-semibold text-lg text-gray-900 group-hover:text-gray-700 transition-colors mb-2">
+        {{ item.title }}
+      </h3>
+      <p class="text-2xl font-bold text-gray-900 mb-2">{{ item.price }} FCFA</p>
+      <div class="flex items-center gap-2 text-sm text-gray-500">
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          {{ item.location }}
+        </span>
+      </div>
+    </div>
+  </a>
+  {% if request.user == item.posted_by %}
+  <form method="post" action="{% url 'listings:delete' item.pk %}" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+    {% csrf_token %}
+    <button type="submit"
+            class="bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            title="Delete listing"
+            onclick="return confirm('Are you sure you want to delete this listing?');">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+    </button>
+  </form>
+  {% endif %}
+</div>
+    {% empty %}
+    <div class="col-span-full text-center py-16">
+      <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
+        <span class="text-6xl block mb-4">🐄</span>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No listings yet</h3>
+        <p class="text-gray-500 mb-4">Check back soon for available livestock.</p>
+        {% if user.is_authenticated and user.is_seller %}
+        <a href="{% url 'listings:create' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+          Post Your First Listing
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Categories section with images -->
+<section class="mb-12">
+  <h2 class="text-2xl font-bold text-gray-900 mb-6">Browse by Category</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-5 md:gap-6">
+    {% for c in categories %}
+    <a href="{% url 'listings:list' %}?category={{ c.slug }}"
+       class="group block bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+      <div class="relative aspect-[4/3] overflow-hidden">
+        {% if c.name == "Cattle" %}
+          <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="Cattle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        {% elif c.name == "Goats" %}
+          <img src="{% static 'imgs/240_F_2114489603_TmveN8HJB1cTELfjEu6BoaWt2dz6g22w.jpg' %}" alt="Goats" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        {% elif c.name == "Poultry" %}
+          <img src="{% static 'imgs/303727_chickenfarmcagegettyimages184362512_954731_crop.jpg' %}" alt="Poultry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        {% elif c.name == "Plant" %}
+          <img src="{% static 'imgs/plant.jpg' %}" alt="Plant" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        {% elif c.name == "Animal" %}
+          <img src="{% static 'imgs/animal.jpg' %}" alt="Animal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+        {% else %}
+          <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <span class="text-5xl">🐄</span>
+          </div>
+        {% endif %}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+      </div>
+      <div class="p-6">
+        <h3 class="font-semibold text-xl text-gray-900 text-white group-hover:text-gray-200 transition-colors relative z-10 -mt-12 px-3">
+          {{ c.name }}
+        </h3>
+      </div>
+    </a>
+    {% empty %}
+    <p class="col-span-full text-center text-gray-500 py-8">No categories available.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Stats/CTA section -->
+<section class="bg-gray-900 rounded-2xl p-8 lg:p-12 text-center text-white">
+  <h2 class="text-2xl lg:text-3xl font-bold mb-3">Ready to Buy or Sell?</h2>
+  <p class="text-gray-300 mb-6 max-w-2xl mx-auto">
+    Join thousands of farmers and buyers connecting directly. No middlemen, no fees — just direct deals on WhatsApp.
+  </p>
+  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+    <a href="{% url 'listings:list' %}" class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+      Browse Listings
+    </a>
+    {% if user.is_authenticated and user.is_seller %}
+    <a href="{% url 'listings:create' %}" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
+      Post Livestock
+    </a>
+    {% elif not user.is_authenticated %}
+    <a href="{% url 'accounts:signup' %}" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
+      Create Account
+    </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

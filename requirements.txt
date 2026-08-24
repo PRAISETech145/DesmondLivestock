@@ -1,0 +1,9 @@
+ 
+django-htmx>=1.17
+python-dotenv>=1.0
+dj-database-url>=2.1
+django-storages[boto3]>=1.14
+cloudinary==1.40.0
+django-cloudinary-storage==0.3.0
+gunicorn>=21.2
+locust>=2.15
