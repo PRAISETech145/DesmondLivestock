@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 
 class Category(models.Model):
@@ -35,10 +36,10 @@ class Livestock(models.Model):
         help_text="Digits only with country code, e.g. 237670000000",
     )
     # Image fields - image_1 is required (enforced at form level), image_2 and image_3 optional
-    # Allow null/blank at DB level to support existing records and migration
-    image_1 = models.ImageField(upload_to="livestock/%Y/%m/", blank=True, null=True)
-    image_2 = models.ImageField(upload_to="livestock/%Y/%m/", blank=True, null=True)
-    image_3 = models.ImageField(upload_to="livestock/%Y/%m/", blank=True, null=True)
+    # Using CloudinaryField for reliable persistence in production
+    image_1 = CloudinaryField('image', folder='livestock/', blank=True, null=True)
+    image_2 = CloudinaryField('image', folder='livestock/', blank=True, null=True)
+    image_3 = CloudinaryField('image', folder='livestock/', blank=True, null=True)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="listings")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
