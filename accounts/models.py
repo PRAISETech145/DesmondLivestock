@@ -1,10 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 
 def user_avatar_path(instance, filename):
-    """Upload avatars to media/avatars/user_<id>/<filename>"""
+    """Upload avatars to media/avatars/user_<id>/<filename> (legacy for migration)"""
     ext = filename.split(".")[-1]
     return f"avatars/user_{instance.pk}/avatar.{ext}"
 
@@ -18,7 +19,7 @@ class CustomUser(AbstractUser):
     """
     is_seller = models.BooleanField(default=False)
     phone = models.CharField(max_length=20, blank=True)
-    avatar = models.ImageField(upload_to=user_avatar_path, blank=True, null=True)
+    avatar = CloudinaryField('image', folder='avatars/', blank=True, null=True)
     bio = models.TextField(blank=True, max_length=500)
     location = models.CharField(max_length=120, blank=True)
 
