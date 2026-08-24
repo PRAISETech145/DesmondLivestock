@@ -4,7 +4,7 @@ Django settings for livestock_project.
 
 import os
 from pathlib import Path
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env file if it exists (for local development)
