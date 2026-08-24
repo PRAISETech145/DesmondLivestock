@@ -30,6 +30,10 @@ ENV/
 *.swo
 *~
 
+# Claude Code
+.claude/
+CLAUDE.md
+
 # OS
 .DS_Store
 Thumbs.db
@@ -96,4 +100,3 @@ dmypy.json
 
 # Environments
 *.env
-.md

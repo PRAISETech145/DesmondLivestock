@@ -15,7 +15,7 @@ A Django + HTMX + Tailwind livestock marketplace where:
 ```bash
 # Setup
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate  # ndows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Database
