@@ -7,5 +7,5 @@ cloudinary==1.40.0
 django-cloudinary-storage==0.3.0
 gunicorn>=21.2
 locust>=2.15
-psycopg2-binary==2.9.10
+psycopg2-binary>=2.9
 Pillow==11.0.0
