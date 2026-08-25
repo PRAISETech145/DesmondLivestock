@@ -29,12 +29,6 @@
         <div class="flex-1 text-center sm:text-left">
           <div class="flex items-center justify-center sm:justify-start gap-2 mb-2">
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ profile_user.username }}</h1>
-            {% if profile_user.is_seller %}
-              <span class="inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                Seller
-              </span>
-            {% endif %}
             {% if profile_user.is_superuser %}
               <span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
                 Admin

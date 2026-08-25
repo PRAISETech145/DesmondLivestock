@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Forum Topics - AgroForum{% endblock %}
+
+{% block hero %}
+<div class="relative z-10 max-w-6xl mx-auto px-4 py-12 lg:py-16 text-center">
+  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">Forum Topics</h1>
+  <p class="text-gray-200 max-w-2xl mx-auto">Browse discussions by category</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for topic in topics %}
+    <a href="{% url 'agroforum:topic' topic.slug %}"
+       class="group bg-white border border-gray-200 rounded-2xl p-6 hover:border-green-300 hover:shadow-xl transition-all duration-300">
+      <div class="flex items-start gap-4">
+        <div class="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center text-2xl flex-shrink-0 group-hover:bg-green-200 transition-colors">
+          {{ topic.icon|default:"💬" }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-lg text-gray-900 group-hover:text-green-700 transition-colors mb-1">{{ topic.name }}</h3>
+          <p class="text-sm text-gray-500 line-clamp-2">{{ topic.description|default:"No description" }}</p>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-400">
+        {{ topic.posts.count }} posts
+      </div>
+    </a>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+      <p class="text-gray-500">No topics yet. Create one in the admin panel.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

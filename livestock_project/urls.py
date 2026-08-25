@@ -8,6 +8,8 @@ urlpatterns = [
     path("", include("core.urls")),
     path("listings/", include("listings.urls")),
     path("accounts/", include("accounts.urls")),
+    path("forum/", include("agroforum.urls")),
+    path("people/", include("social.urls")),
 ]
 
 if settings.DEBUG:

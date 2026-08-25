@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if post %}Edit{% else %}Create{% endif %} Post - AgroForum{% endblock %}
+
+{% block hero %}
+<div class="relative z-10 max-w-6xl mx-auto px-4 py-12 lg:py-16 text-center">
+  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">{% if post %}Edit Post{% else %}New Post{% endif %}</h1>
+  <p class="text-gray-200 max-w-2xl mx-auto">Share your farming challenges, ideas, or experiences with the community.</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white border border-gray-200 rounded-2xl p-6 lg:p-8">
+    <form method="post" enctype="multipart/form-data" class="space-y-6" id="post-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+        {% for error in form.non_field_errors %}
+        <p class="text-red-600 text-sm">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Topic -->
+      <div>
+        <label for="{{ form.topic.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+          Topic
+        </label>
+        {{ form.topic }}
+        {% if form.topic.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.topic.errors|join:", " }}</p>
+        {% endif %}
+        <p class="text-gray-400 text-sm mt-1">Optional - categorize your post</p>
+      </div>
+
+      <!-- Title -->
+      <div>
+        <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+          Title (optional)
+        </label>
+        {{ form.title }}
+        {% if form.title.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.title.errors|join:", " }}</p>
+        {% endif %}
+        <p class="text-gray-400 text-sm mt-1">A short, descriptive title helps others find your post</p>
+      </div>
+
+      <!-- Content -->
+      <div>
+        <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+          Content <span class="text-red-500">*</span>
+        </label>
+        {{ form.content }}
+        {% if form.content.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.content.errors|join:", " }}</p>
+        {% endif %}
+        <p class="text-gray-400 text-sm mt-1">Describe your challenge, idea, or experience in detail</p>
+      </div>
+
+      <!-- Image -->
+      <div>
+        <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+          Image (optional)
+        </label>
+        {{ form.image }}
+        {% if form.image.errors %}
+        <p class="text-red-600 text-sm mt-1">{{ form.image.errors|join:", " }}</p>
+        {% endif %}
+        <p class="text-gray-400 text-sm mt-1">Add a photo to make your post stand out (JPG, PNG up to 10MB)</p>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200">
+        <button type="submit"
+                class="flex-1 bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors">
+          {% if post %}Save Changes{% else %}Publish Post{% endif %}
+        </button>
+        <a href="{% url 'agroforum:post_list' %}"
+           class="flex-1 bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-lg text-center hover:bg-gray-200 transition-colors">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% block extra_head %}
+<style>
+  #post-form input[type="text"],
+  #post-form textarea,
+  #post-form select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+    background-color: white;
+    transition: all 0.2s;
+  }
+
+  #post-form input[type="text"]:focus,
+  #post-form textarea:focus,
+  #post-form select:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+  }
+
+  #post-form textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  #post-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    padding-right: 2.5rem;
+  }
+</style>
+{% endblock %}
+{% endblock %}

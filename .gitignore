@@ -2,7 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.json
+.agents/
 # Django
 *.log
 local_settings.py
@@ -33,6 +34,7 @@ ENV/
 # Claude Code
 .claude/
 CLAUDE.md
+README.md
 
 # OS
 .DS_Store

@@ -1,0 +1,26 @@
+{% load static %}
+<div class="follow-button-container">
+{% if is_self %}
+  <span class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 bg-gray-100">Your Profile</span>
+{% elif is_following %}
+  <button
+    hx-post="{% url 'social:follow_user' profile_user.username %}"
+    hx-target="closest .follow-button-container"
+    hx-swap="outerHTML"
+    class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors"
+    aria-label="Unfollow {{ profile_user.username }}">
+    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 19V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14"></path></svg>
+    Following
+  </button>
+{% else %}
+  <button
+    hx-post="{% url 'social:follow_user' profile_user.username %}"
+    hx-target="closest .follow-button-container"
+    hx-swap="outerHTML"
+    class="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors"
+    aria-label="Follow {{ profile_user.username }}">
+    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+    Follow
+  </button>
+{% endif %}
+</div>

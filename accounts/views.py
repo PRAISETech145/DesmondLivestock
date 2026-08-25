@@ -1,6 +1,5 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ProfileForm, SignUpForm
@@ -51,29 +50,3 @@ def edit_profile(request):
     return render(request, "accounts/edit_profile.html", {"form": form})
 
 
-@login_required
-def manage_sellers(request):
-    """Admin page to manage who can be sellers - superuser only"""
-    if not request.user.is_superuser:
-        raise PermissionDenied
-
-    users = CustomUser.objects.all().order_by("-date_joined")
-
-    if request.method == "POST":
-        user_id = request.POST.get("user_id")
-        action = request.POST.get("action")
-        user = get_object_or_404(CustomUser, pk=user_id)
-
-        if action == "make_seller":
-            user.is_seller = True
-            user.save()
-        elif action == "remove_seller":
-            user.is_seller = False
-            user.save()
-        elif action == "toggle_seller":
-            user.is_seller = not user.is_seller
-            user.save()
-
-        return redirect("accounts:manage_sellers")
-
-    return render(request, "accounts/manage_sellers.html", {"users": users})

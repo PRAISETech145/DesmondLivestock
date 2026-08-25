@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "accounts",
     "listings",
     "core",
+    "agroforum",
+    "social",
 ]
 
 MIDDLEWARE = [

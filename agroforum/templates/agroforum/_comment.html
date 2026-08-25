@@ -1,0 +1,88 @@
+{% load static %}
+<div class="comment p-4 {% if depth > 0 %}ml-8 md:ml-12 border-l-2 border-gray-100 pl-4{% endif %}"
+     data-comment-id="{{ comment.pk }}"
+     data-depth="{{ depth }}">
+
+  <div class="flex gap-3">
+    <!-- Avatar -->
+    {% if comment.author.avatar %}
+    <img src="{{ comment.author.avatar.url }}" alt="{{ comment.author.username }}"
+         class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+    {% else %}
+    <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+      {{ comment.author.initials }}
+    </div>
+    {% endif %}
+
+    <!-- Comment content -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1">
+        <a href="{% url 'accounts:profile' comment.author.username %}"
+           class="font-semibold text-gray-900 hover:text-gray-700">{{ comment.author.username }}</a>
+        {% if comment.author.is_verified %}
+        <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+        </span>
+        {% endif %}
+        <span class="text-xs text-gray-400">{{ comment.created_at|timesince }} ago</span>
+        {% if comment.updated_at != comment.created_at %}
+        <span class="text-xs text-gray-400">· edited</span>
+        {% endif %}
+      </div>
+
+      {% if comment.is_deleted %}
+      <p class="text-gray-400 italic">This comment has been deleted.</p>
+      {% else %}
+      <p class="text-gray-700 whitespace-pre-wrap leading-relaxed">{{ comment.content }}</p>
+      {% endif %}
+
+      <!-- Comment actions -->
+      <div class="flex items-center gap-4 mt-3">
+        <!-- Like button -->
+        <button hx-post="{% url 'agroforum:comment_like' comment.pk %}"
+                hx-target="closest .comment-like-container"
+                hx-swap="outerHTML"
+                class="comment-like-container flex items-center gap-1.5 text-gray-500 hover:text-green-600 transition-colors text-sm"
+                aria-label="{% if comment.user_has_liked_current %}Unlike{% else %}Like{% endif %} this comment">
+          {% if comment.user_has_liked_current %}
+          <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+          {% else %}
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+          {% endif %}
+          {% if comment.like_count > 0 %}
+          <span class="font-medium">{{ comment.like_count }}</span>
+          {% endif %}
+        </button>
+
+        {% if user.is_authenticated %}
+        <!-- Reply button -->
+        <button type="button"
+                hx-get="{% url 'agroforum:comment_reply_form' comment.pk %}"
+                hx-target="#reply-form-{{ comment.pk }}"
+                hx-swap="innerHTML"
+                class="flex items-center gap-1.5 text-gray-500 hover:text-green-600 transition-colors text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a2 2 0 012 2v4a2 2 0 01-2 2H3a2 2 0 01-2-2v-4a2 2 0 012-2zm9-2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          Reply
+        </button>
+        {% endif %}
+
+        {% if user == comment.author %}
+        <span class="flex-1"></span>
+        <a href="#" class="text-sm text-red-600 hover:text-red-900" onclick="return confirm('Delete this comment?');">Delete</a>
+        {% endif %}
+      </div>
+
+      <!-- Reply form container (hidden by default) -->
+      <div id="reply-form-{{ comment.pk }}" class="mt-3"></div>
+
+      <!-- Nested replies -->
+      {% if comment.replies.all %}
+      <div class="comment-replies mt-4 space-y-4">
+        {% for reply in comment.replies.all %}
+        {% include "agroforum/_comment.html" with comment=reply user=user depth=depth|add:1 %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

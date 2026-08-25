@@ -10,55 +10,207 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between"
-     hx-get="{% url 'listings:list' %}"
-     hx-target="#grid"
-     hx-push-url="true"
-     hx-trigger="change from:#category-select, submit">
+<!-- Filter Sidebar + Grid -->
+<div class="flex flex-col lg:flex-row gap-6">
+  <!-- Filters Sidebar -->
+  <aside class="lg:w-64 flex-shrink-0">
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 lg:p-6 sticky top-24">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-semibold text-gray-900">Filters</h2>
+        {% if selected_category or search or min_price or max_price or location or breed or status or verified %}
+        <a href="{% url 'listings:list' %}"
+           class="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors">
+          Clear all
+        </a>
+        {% endif %}
+      </div>
 
-  <div class="flex-1 w-full sm:w-auto">
-    <label for="category-select" class="sr-only">Filter by category</label>
-    <select id="category-select" name="category"
-            class="w-full sm:w-64 bg-white border border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
-      <option value="">All Categories</option>
-      {% for c in categories %}
-        <option value="{{ c.slug }}" {% if c.slug == selected_category %}selected{% endif %}>{{ c.name }}</option>
-      {% endfor %}
-    </select>
-  </div>
+      <form id="filter-form"
+            hx-get="{% url 'listings:list' %}"
+            hx-target="#grid"
+            hx-push-url="true"
+            hx-trigger="change from:#category-select, change from:#min-price, change from:#max-price, change from:#location-select, change from:#breed-select, change from:#status-select, change from:#verified-seller, submit from:#search-form"
+            class="space-y-5">
 
-  <form class="flex-1 flex gap-2 w-full sm:w-auto"
-        hx-get="{% url 'listings:list' %}"
-        hx-target="#grid"
-        hx-push-url="true">
-    {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
-    <label for="search-input" class="sr-only">Search livestock</label>
-    <input type="text" name="q" id="search-input" value="{{ search }}" placeholder="Search livestock..."
-           class="flex-1 bg-white border border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all">
-    <button type="submit"
-            class="bg-gray-900 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm hover:bg-gray-700 transition-colors whitespace-nowrap">
-      Search
-    </button>
-  </form>
+        <!-- Search -->
+        <div>
+          <form id="search-form" class="space-y-2">
+            <label for="search-input" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <input type="text" name="q" id="search-input" value="{{ search }}" placeholder="Search listings..."
+                   class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all">
+          </form>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label for="category-select" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+          <select id="category-select" name="category"
+                  class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
+            <option value="">All Categories</option>
+            {% for c in categories %}
+              <option value="{{ c.slug }}" {% if c.slug == selected_category %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label for="min-price" class="block text-sm font-medium text-gray-700 mb-1">Min Price (FCFA)</label>
+            <input type="number" name="min_price" id="min-price" value="{{ min_price }}" placeholder="0"
+                   class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all min-w-0">
+          </div>
+          <div>
+            <label for="max-price" class="block text-sm font-medium text-gray-700 mb-1">Max Price</label>
+            <input type="number" name="max_price" id="max-price" value="{{ max_price }}" placeholder="Any"
+                   class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all min-w-0">
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label for="location-select" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <select id="location-select" name="location"
+                  class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
+            <option value="">All Locations</option>
+            {% for loc in locations %}
+              <option value="{{ loc }}" {% if loc == location %}selected{% endif %}>{{ loc }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Breed -->
+        <div>
+          <label for="breed-select" class="block text-sm font-medium text-gray-700 mb-1">Breed</label>
+          <select id="breed-select" name="breed"
+                  class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
+            <option value="">All Breeds</option>
+            {% for b in breeds %}
+              <option value="{{ b }}" {% if b == breed %}selected{% endif %}>{{ b }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label for="status-select" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select id="status-select" name="status"
+                  class="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
+            <option value="available" {% if status == "available" or not status %}selected{% endif %}>Available</option>
+            <option value="reserved" {% if status == "reserved" %}selected{% endif %}>Reserved</option>
+            <option value="sold" {% if status == "sold" %}selected{% endif %}>Sold</option>
+          </select>
+        </div>
+
+        <!-- Verified Seller -->
+        <div>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="verified" id="verified-seller" value="true" {% if verified %}checked{% endif %}
+                   class="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-500 focus:ring-2">
+            <span class="text-sm text-gray-700">Verified sellers only</span>
+          </label>
+        </div>
+
+        <!-- Hidden inputs to preserve other filters on HTMX requests -->
+        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+        {% if search %}<input type="hidden" name="q" value="{{ search }}">{% endif %}
+        {% if min_price %}<input type="hidden" name="min_price" value="{{ min_price }}">{% endif %}
+        {% if max_price %}<input type="hidden" name="max_price" value="{{ max_price }}">{% endif %}
+        {% if location %}<input type="hidden" name="location" value="{{ location }}">{% endif %}
+        {% if breed %}<input type="hidden" name="breed" value="{{ breed }}">{% endif %}
+        {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+        {% if verified %}<input type="hidden" name="verified" value="{{ verified }}">{% endif %}
+
+      </form>
+    </div>
+  </aside>
+
+  <!-- Main Grid -->
+  <main class="flex-1 min-w-0">
+    <div class="flex flex-col sm:flex-row gap-4 mb-6 items-start sm:items-center justify-between"
+         hx-get="{% url 'listings:list' %}"
+         hx-target="#grid"
+         hx-push-url="true"
+         hx-trigger="change from:#category-select, submit from:#search-form">
+
+      <div class="flex-1 w-full sm:w-auto">
+        <label for="category-select" class="sr-only">Filter by category</label>
+        <select id="category-select" name="category"
+                class="w-full sm:w-64 bg-white border border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-gray-900 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E')] bg-[right_0.5rem_center] bg-no-repeat pr-10">
+          <option value="">All Categories</option>
+          {% for c in categories %}
+            <option value="{{ c.slug }}" {% if c.slug == selected_category %}selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <form id="search-form" class="flex-1 flex gap-2 w-full sm:w-auto"
+            hx-get="{% url 'listings:list' %}"
+            hx-target="#grid"
+            hx-push-url="true">
+        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+        {% if min_price %}<input type="hidden" name="min_price" value="{{ min_price }}">{% endif %}
+        {% if max_price %}<input type="hidden" name="max_price" value="{{ max_price }}">{% endif %}
+        {% if location %}<input type="hidden" name="location" value="{{ location }}">{% endif %}
+        {% if breed %}<input type="hidden" name="breed" value="{{ breed }}">{% endif %}
+        {% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}
+        {% if verified %}<input type="hidden" name="verified" value="{{ verified }}">{% endif %}
+        <label for="search-input" class="sr-only">Search livestock</label>
+        <input type="text" name="q" id="search-input" value="{{ search }}" placeholder="Search livestock..."
+               class="flex-1 bg-white border border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all">
+        <button type="submit"
+                class="bg-gray-900 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold text-sm hover:bg-gray-700 transition-colors whitespace-nowrap">
+          Search
+        </button>
+      </form>
+    </div>
+
+    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+      {% include "listings/_grid.html" %}
+    </div>
+
+    {% if not page.object_list and not selected_category and not search and not min_price and not max_price and not location and not breed and not status and not verified %}
+    <div class="text-center py-16">
+      <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
+        <span class="text-6xl block mb-4">🔍</span>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No livestock found</h3>
+        <p class="text-gray-500 mb-4">Try adjusting your search or browse all categories.</p>
+        <a href="{% url 'listings:list' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+          Clear Filters
+        </a>
+      </div>
+    </div>
+    {% elif not page.object_list %}
+    <div class="text-center py-16">
+      <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
+        <span class="text-6xl block mb-4">🔍</span>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">No livestock matches your filters</h3>
+        <p class="text-gray-500 mb-4">Try adjusting your filters or search terms.</p>
+        <a href="{% url 'listings:list' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+          Clear All Filters
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </main>
 </div>
 
-<div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-  {% include "listings/_grid.html" %}
-</div>
-
-{% if not page.object_list and not selected_category and not search %}
-<div class="text-center py-16">
-  <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
-    <span class="text-6xl block mb-4">🔍</span>
-    <h3 class="text-xl font-semibold text-gray-700 mb-2">No livestock found</h3>
-    <p class="text-gray-500 mb-4">Try adjusting your search or browse all categories.</p>
-    <a href="{% url 'listings:list' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
-      Clear Filters
-    </a>
-  </div>
+{% if page.has_next %}
+<div class="col-span-full text-center mt-4 lg:col-span-3">
+  <button
+    hx-get="?page={{ page.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search %}&q={{ search }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if breed %}&breed={{ breed }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if verified %}&verified={{ verified }}{% endif %}"
+    hx-target="closest div.grid"
+    hx-swap="beforeend"
+    hx-select="article, div.col-span-full"
+    hx-indicator="#load-more-spinner"
+    class="inline-flex items-center justify-center gap-2 text-gray-700 font-semibold px-5 lg:px-6 py-2.5 lg:py-3 border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all"
+    aria-label="Load more listings">
+    <span>Load more</span>
+    <svg id="load-more-spinner" class="htmx-indicator animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  </button>
 </div>
 {% endif %}
 {% endblock %}
- 
- 
- 
