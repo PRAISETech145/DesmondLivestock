@@ -11,7 +11,7 @@
 
     <div class="flex gap-3">
       {% if user.avatar %}
-      <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="w-8 h-8 rounded-full object-cover flex-shrink-0">
+      <img src="{{ user.avatar_url }}" alt="{{ user.username }}" class="w-8 h-8 rounded-full object-cover flex-shrink-0">
       {% else %}
       <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
         {{ user.initials }}

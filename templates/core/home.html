@@ -202,140 +202,246 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 {% block content %}
-<section class="mb-12">
-  <div class="flex items-center justify-between mb-6">
-    <h2 class="text-2xl font-bold text-gray-900">Featured Listings</h2>
-    <a href="{% url 'listings:list' %}" class="text-gray-900 hover:text-gray-700 font-medium text-sm">View all →</a>
-  </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for item in featured %}
-<div class="group relative">
-  <a href="{% url 'listings:detail' item.pk %}"
-     class="group-inner block border border-gray-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-    <div class="relative aspect-[4/3] overflow-hidden">
-      {% if item.images_list %}
-        <img src="{{ item.images_list.0.url }}"
-             alt="{{ item.title }}"
-             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-      {% else %}
-        <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-          <span class="text-5xl">🐄</span>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+  <!-- Main Feed Column (3/4 width) -->
+  <main class="lg:col-span-3">
+    <!-- Featured Listings -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Featured Listings</h2>
+        <a href="{% url 'listings:list' %}" class="text-gray-900 hover:text-gray-700 font-medium text-sm">View all →</a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in featured %}
+        <div class="group relative">
+          <a href="{% url 'listings:detail' item.pk %}"
+             class="group-inner block border border-gray-200 rounded-2xl overflow-hidden bg-white hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <div class="relative aspect-[4/3] overflow-hidden">
+              {% if item.images_list %}
+                <img src="{{ item.images_list.0.url }}"
+                     alt="{{ item.title }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% else %}
+                <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  <span class="text-5xl">🐄</span>
+                </div>
+              {% endif %}
+              <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
+                {{ item.category.name }}
+              </span>
+              {% if item.status != "available" %}
+                <span class="absolute top-3 right-3 bg-red-600 text-white text-xs font-medium px-2 py-1 rounded-full">
+                  {{ item.get_status_display }}
+                </span>
+              {% endif %}
+              {% if item.posted_by.is_verified %}
+                <span class="absolute top-3 right-3 flex items-center gap-1 bg-amber-500 text-white text-xs font-medium px-2.5 py-1 rounded-full"
+                      title="Verified Seller">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                  Verified
+                </span>
+              {% endif %}
+            </div>
+            <div class="p-5">
+              <h3 class="font-semibold text-lg text-gray-900 group-hover:text-gray-700 transition-colors mb-2">
+                {{ item.title }}
+              </h3>
+              <p class="text-2xl font-bold text-gray-900 mb-2">{{ item.price }} FCFA</p>
+              <div class="flex items-center gap-2 text-sm text-gray-500">
+                <span class="flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                  {{ item.location }}
+                </span>
+              </div>
+            </div>
+          </a>
+          {% if request.user == item.posted_by %}
+          <form method="post" action="{% url 'listings:delete' item.pk %}" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+            {% csrf_token %}
+            <button type="submit"
+                    class="bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    title="Delete listing"
+                    onclick="return confirm('Are you sure you want to delete this listing?');">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+          </form>
+          {% endif %}
         </div>
-      {% endif %}
-      <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-medium px-2 py-1 rounded-full">
-        {{ item.category.name }}
-      </span>
-      {% if item.status != "available" %}
-        <span class="absolute top-3 right-3 bg-red-600 text-white text-xs font-medium px-2 py-1 rounded-full">
-          {{ item.get_status_display }}
-        </span>
-      {% endif %}
-      {% if item.posted_by.is_verified %}
-        <span class="absolute top-3 right-3 flex items-center gap-1 bg-amber-500 text-white text-xs font-medium px-2.5 py-1 rounded-full"
-              title="Verified Seller">
-          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-          Verified
-        </span>
-      {% endif %}
-    </div>
-    <div class="p-5">
-      <h3 class="font-semibold text-lg text-gray-900 group-hover:text-gray-700 transition-colors mb-2">
-        {{ item.title }}
-      </h3>
-      <p class="text-2xl font-bold text-gray-900 mb-2">{{ item.price }} FCFA</p>
-      <div class="flex items-center gap-2 text-sm text-gray-500">
-        <span class="flex items-center gap-1">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-          {{ item.location }}
-        </span>
-      </div>
-    </div>
-  </a>
-  {% if request.user == item.posted_by %}
-  <form method="post" action="{% url 'listings:delete' item.pk %}" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-    {% csrf_token %}
-    <button type="submit"
-            class="bg-red-600 text-white p-2 rounded-full shadow-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            title="Delete listing"
-            onclick="return confirm('Are you sure you want to delete this listing?');">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-    </button>
-  </form>
-  {% endif %}
-</div>
-    {% empty %}
-    <div class="col-span-full text-center py-16">
-      <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
-        <span class="text-6xl block mb-4">🐄</span>
-        <h3 class="text-xl font-semibold text-gray-700 mb-2">No listings yet</h3>
-        <p class="text-gray-500 mb-4">Check back soon for available livestock.</p>
-        {% if user.is_authenticated %}
-        <a href="{% url 'listings:create' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
-          Post Your First Listing
-        </a>
-        {% endif %}
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</section>
-
-<!-- Categories section with images -->
-<section class="mb-12">
-  <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-5">Browse by Category</h2>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-    {% for c in categories %}
-    <a href="{% url 'listings:list' %}?category={{ c.slug }}"
-       class="group block bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 hover:shadow-xl transition-all duration-300">
-      <div class="relative aspect-square overflow-hidden">
-        {% if c.name == "Cattle" %}
-          <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="Cattle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-        {% elif c.name == "Goats" %}
-          <img src="{% static 'imgs/240_F_2114489603_TmveN8HJB1cTELfjEu6BoaWt2dz6g22w.jpg' %}" alt="Goats" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-        {% elif c.name == "Poultry" %}
-          <img src="{% static 'imgs/303727_chickenfarmcagegettyimages184362512_954731_crop.jpg' %}" alt="Poultry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-        {% elif c.name == "Plant" %}
-          <img src="{% static 'imgs/plant.jpg' %}" alt="Plant" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-        {% elif c.name == "Animal" %}
-          <img src="{% static 'imgs/animal.jpg' %}" alt="Animal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-        {% else %}
-          <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-            <span class="text-4xl lg:text-5xl">🐄</span>
+        {% empty %}
+        <div class="col-span-full text-center py-16">
+          <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
+            <span class="text-6xl block mb-4">🐄</span>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No listings yet</h3>
+            <p class="text-gray-500 mb-4">Check back soon for available livestock.</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'listings:create' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+              Post Your First Listing
+            </a>
+            {% endif %}
           </div>
-        {% endif %}
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        </div>
+        {% endfor %}
       </div>
-      <div class="p-4 lg:p-5">
-        <h3 class="font-semibold text-lg lg:text-xl text-white relative z-10 -mt-10 px-2 lg:px-3 truncate">
-          {{ c.name }}
-        </h3>
-      </div>
-    </a>
-    {% empty %}
-    <p class="col-span-full text-center text-gray-500 py-6">No categories available.</p>
-    {% endfor %}
-  </div>
-</section>
+    </section>
 
-<!-- Stats/CTA section -->
-<section class="bg-gray-900 rounded-2xl p-8 lg:p-12 text-center text-white">
-  <h2 class="text-2xl lg:text-3xl font-bold mb-3">Ready to Buy or Sell?</h2>
-  <p class="text-gray-300 mb-6 max-w-2xl mx-auto">
-    Join thousands of farmers and buyers connecting directly. No middlemen, no fees — just direct deals on WhatsApp.
-  </p>
-  <div class="flex flex-col sm:flex-row gap-4 justify-center">
-    <a href="{% url 'listings:list' %}" class="inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-8 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
-      Browse Listings
-    </a>
-    {% if user.is_authenticated %}
-    <a href="{% url 'listings:create' %}" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
-      Post Livestock
-    </a>
-    {% elif not user.is_authenticated %}
-    <a href="{% url 'accounts:signup' %}" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-3 rounded-xl font-semibold hover:bg-white/10 transition-colors">
-      Create Account
-    </a>
-    {% endif %}
-  </div>
-</section>
+    <!-- AgroForum Feed (3 recent posts with images) -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Latest Forum Activity</h2>
+        <a href="{% url 'agroforum:post_list' %}" class="text-gray-900 hover:text-gray-700 font-medium text-sm">View all →</a>
+      </div>
+      <div class="space-y-4">
+        {% for post in latest_forum_posts %}
+        <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+          <div class="flex flex-col md:flex-row">
+            {% if post.image %}
+            <a href="{{ post.get_absolute_url }}" class="relative w-full md:w-64 aspect-[4/3] md:aspect-auto h-48 md:h-auto min-h-[180px] overflow-hidden flex-shrink-0">
+              <img src="{{ post.image.url }}"
+                   alt="{{ post.title|default:post.content|truncatechars:50 }}"
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            </a>
+            {% else %}
+            <a href="{{ post.get_absolute_url }}" class="relative w-full md:w-64 aspect-[4/3] md:aspect-auto h-48 md:h-auto min-h-[180px] bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center flex-shrink-0">
+              <span class="text-5xl opacity-50">{{ post.topic.icon|default:"🌱" }}</span>
+            </a>
+            {% endif %}
+            <div class="p-5 flex flex-col flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-3">
+                {% if post.author.avatar %}
+                <img src="{{ post.author.avatar_url }}" alt="{{ post.author.username }}" class="w-10 h-10 rounded-full object-cover">
+                {% else %}
+                <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-sm">
+                  {{ post.author.initials }}
+                </div>
+                {% endif %}
+                <div class="min-w-0 flex-1">
+                  <p class="font-semibold text-gray-900 truncate">{{ post.author.username }}</p>
+                  <p class="text-xs text-gray-500">{{ post.created_at|timesince }} ago</p>
+                </div>
+                {% if post.is_pinned %}
+                <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.597 6.494L10 5l1.403 1.494 3.404.292-2.466 2.402.583 3.392-2.925-1.539-2.926 1.539.582-3.392L5.193 6.786l3.404-.292z"></path></svg>
+                  Pinned
+                </span>
+                {% endif %}
+              </div>
+
+              {% if post.title %}
+              <h3 class="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">{{ post.title }}</h3>
+              {% endif %}
+
+              <p class="text-gray-700 flex-1 mb-4 line-clamp-3">{{ post.content }}</p>
+
+              <!-- Post stats -->
+              <div class="flex items-center gap-4 border-t border-gray-100 pt-4">
+                <button hx-post="{% url 'agroforum:post_like' post.pk %}"
+                        hx-target="closest .post-like-container"
+                        hx-swap="outerHTML"
+                        class="post-like-container flex items-center gap-1.5 text-gray-500 hover:text-green-600 transition-colors py-1"
+                        aria-label="{% if post.user_has_liked_current %}Unlike{% else %}Like{% endif %} this post">
+                  {% if post.user_has_liked_current %}
+                  <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path></svg>
+                  {% else %}
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path></svg>
+                  {% endif %}
+                  <span class="text-sm font-medium">{{ post.like_count }}</span>
+                </button>
+
+                <a href="{{ post.get_absolute_url }}" class="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 transition-colors py-1">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                  <span class="text-sm font-medium">{{ post.comment_count }}</span>
+                </a>
+
+                <span class="flex-1"></span>
+
+                <span class="text-xs text-gray-400">{{ post.view_count }} views</span>
+              </div>
+            </div>
+          </div>
+        </article>
+        {% empty %}
+        <div class="text-center py-8">
+          <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
+            <span class="text-5xl block mb-3">💬</span>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No forum posts yet</h3>
+            <p class="text-gray-500 mb-4">Be the first to start a discussion!</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'agroforum:post_create' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+              Create First Post
+            </a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <!-- Sidebar: Categories (1/4 width) -->
+  <aside class="lg:col-span-1">
+    <div class="sticky top-24 space-y-4">
+      <div class="bg-white border border-gray-200 rounded-2xl p-5">
+        <h3 class="font-semibold text-lg text-gray-900 mb-4">Browse by Category</h3>
+        <div class="space-y-3">
+          {% for c in categories %}
+          <a href="{% url 'listings:list' %}?category={{ c.slug }}"
+             class="group block bg-gray-50 border border-gray-100 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all duration-300">
+            <div class="relative aspect-video overflow-hidden">
+              {% if c.slug == "cattle" or c.name == "Cattle" %}
+                <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="Cattle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% elif c.slug == "goats" or c.name == "Goats" %}
+                <img src="{% static 'imgs/240_F_2114489603_TmveN8HJB1cTELfjEu6BoaWt2dz6g22w.jpg' %}" alt="Goats" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% elif c.slug == "poultry" or c.name == "Poultry" %}
+                <img src="{% static 'imgs/303727_chickenfarmcagegettyimages184362512_954731_crop.jpg' %}" alt="Poultry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% elif c.slug == "plant" or c.name == "Plant" %}
+                <img src="{% static 'imgs/plant.jpg' %}" alt="Plant" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% elif c.slug == "animal" or c.name == "Animal" %}
+                <img src="{% static 'imgs/animal.jpg' %}" alt="Animal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% elif c.slug == "feed-formula" or c.slug == "feed" or c.slug == "feed-formular" or c.name|lower == "feed formula" or c.name|lower == "feed" %}
+                <img src="{% static 'imgs/feeds.jpg' %}" alt="Feed Formula" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              {% else %}
+                <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  <span class="text-4xl">🐄</span>
+                </div>
+              {% endif %}
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+            </div>
+            <div class="p-3 lg:p-4">
+              <h4 class="font-semibold text-white relative z-10 -mt-8 px-2 truncate">
+                {{ c.name }}
+              </h4>
+            </div>
+          </a>
+          {% empty %}
+          <p class="text-center text-gray-500 py-4">No categories available.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Feed Formula WhatsApp CTA -->
+      <div class="bg-gradient-to-br from-green-600 to-green-700 rounded-2xl p-5">
+        <a href="https://wa.me/237652807409?text=Hi%2C%20I%27m%20interested%20in%20a%20custom%20feed%20formula%20for%20my%20livestock."
+           target="_blank" rel="noopener"
+           class="block hover:opacity-90 transition-opacity">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.75 12.5c-.17-.33-.33-.42-.58-.5-.25-.17-.42-.21-.5-.21-.17 0-.33-.08-.42-.08-.08 0-.17-.04-.25-.04-.25 0-.5-.08-.75-.25-.17-.08-.33-.25-.5-.5-.17-.17-.42-.5.42-.75 0-.17.08-.25.08-.42 0-.08-.08-.17-.08-.33-.08-.33-.25-.42-.42-.33-.17-.08-.42-.08-.58-.17-.33-.08-.67-.08-1 0-.33 0-.58.08-.75.08-.17.08-.33.17-.5.17-.25.25-.42.42-.58.5-.17.25-.17.42-.08.5.17.17.42.17.58.33.58.75.33 1.83.42 2.25.08.33-.17.5-.33.67-.5.08-.17.08-.25.08-.33 0-.25-.08-.33-.17-.33-.17 0-.5-.08-.75-.17-.17-.08-.42-.21-.67-.33 0 0-.58-.08-1.25-.42-.17-.17-.25-.25-.25-.42 0-.17.25-.33.33-.5.25-.17.58-.33.92-.42.33-.08.75-.17 1-.25.33-.08.67-.08 1-.08.33 0 .58.08.83.17.42.08.67.25.75.33.17.17.25.42.25.67 0 .25-.17.42-.25.58-.17.25-.58.58-1.5 1.75-.58.67-1 1.08-1.25 1.17-.17.08-.25.08-.42.08-.17 0-.33-.04-.42-.04-.17 0-.33-.04-.5-.17zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm5.5-10.75c0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 .08.04.25.13.33-.5.25-.83.67-1 .92-.08.25-.17.42-.25.5-.17.17-.42.17-.58.17-.25 0-.42-.08-.58-.25-.17-.17-.25-.33-.25-.5 0-.25.17-.42.33-.58.5-.67 1.25-1.5 2.25-2.25.25-.17.42-.25.67-.25.33 0 .5.08.67.17.42.08.67.25.83.5.08.25.08.58.08.83s-.04.5-.08.58c-.04.08-.17.17-.25.33-.17.17-.33.17-.5.17-.33 0-.58-.08-.75-.08h-1.75c-.33 0-.58-.08-.83-.17-.25-.25-.33-.5-.33-.75 0-.33.25-.58.42-.75.25-.17.67-.33 1.25-.5.17 0 .33-.08.5-.08.17 0 .33.04.58.08.25.04.42.17.58.25.25.17.42.33.58.58l.08.25c0 .17.04.33.17.42.08.08.21.17.33.25.33.17.33.17.25.17-.08 0-.17 0-.25-.17-.17-.17-.33-.25-.5-.25-.17 0-.33 0-.5.08h-.5c-.33 0-.58-.08-.83-.17-.25-.25-.33-.5-.33-.75 0-.33.25-.58.42-.75.25-.17.67-.33 1.25-.5.17 0 .33-.08.5-.08.17 0 .33.04.58.08.25.04.42.17.58.25.25.17.42.33.58.58l.08.25c0 .17.04.33.17.42.08.08.21.17.33.25.33.17.33.17.25.17-.08 0-.17 0-.25-.17-.17-.17-.33-.25-.5-.25-.17 0-.33 0-.5.08h-.5c-.17 0-.33-.08-.5-.17-.17-.08-.25-.25-.25-.5 0-.08.04-.17.08-.25.08-.08.83-.92 1.5-1.92.33-.5.67-1 1.08-1.42.17-.25.25-.42.33-.58.08-.17.08-.25.08-.33s-.08-.25-.17-.33c-.17-.17-.42-.17-.67-.17-.42 0-.75.17-.92.33-.33.25-.42.58-.33 1 .08.25.17.58.17.67 0 .17-.08.33-.08.5 0 .25-.08.42-.17.58z"></path></svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-white">Need a Feed Formula?</h4>
+              <p class="text-xs text-green-100">Custom nutrition for your livestock</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center gap-2 bg-white text-green-700 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-green-50 transition-colors">
+            Chat on WhatsApp
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+          </span>
+        </a>
+      </div>
+
+      <!-- CTA Card -->
+
+    </div>
+  </aside>
+</div>
 {% endblock %}

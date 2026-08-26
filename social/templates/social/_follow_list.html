@@ -2,40 +2,15 @@
 {% if page.object_list %}
 <div class="space-y-3">
   {% for follow in page %}
-  {% with target_user=follow.follower tab=tab %}
-  {% if tab == 'following' %}{% with target_user=follow.followed %}{% endwith %}{% endif %}
-  <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-    <a href="{% url 'social:user_detail' target_user.username %}">
-      {% if target_user.avatar %}
-      <img src="{{ target_user.avatar.url }}" alt="{{ target_user.username }}" class="w-12 h-12 rounded-full object-cover">
-      {% else %}
-      <div class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-base">
-        {{ target_user.initials }}
-      </div>
-      {% endif %}
-    </a>
-    <div class="min-w-0 flex-1">
-      <a href="{% url 'social:user_detail' target_user.username %}" class="font-semibold text-gray-900 hover:text-green-600 transition-colors truncate block">{{ target_user.username }}</a>
-      {% if target_user.is_verified %}
-      <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
-        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-        Verified
-      </span>
-      {% endif %}
-      {% if target_user.bio %}
-      <p class="text-gray-500 text-sm truncate mt-1">{{ target_user.bio }}</p>
-      {% endif %}
-    </div>
-
-    {% if request.user.is_authenticated and target_user != request.user %}
-    <div class="follow-button-container">
-      {% with is_following=target_user.is_following is_self=False %}
-      {% include "social/_follow_button.html" %}
-      {% endwith %}
-    </div>
-    {% endif %}
-  </div>
-  {% endwith %}
+  {% if tab == 'following' %}
+    {% with target_user=follow.followed %}
+    {% include "social/_follow_list_item.html" %}
+    {% endwith %}
+  {% else %}
+    {% with target_user=follow.follower %}
+    {% include "social/_follow_list_item.html" %}
+    {% endwith %}
+  {% endif %}
   {% endfor %}
 </div>
 

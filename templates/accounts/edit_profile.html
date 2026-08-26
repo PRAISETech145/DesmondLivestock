@@ -18,7 +18,7 @@
       <!-- Current Avatar -->
       <div class="text-center">
         {% if form.instance.avatar %}
-          <img src="{{ form.instance.avatar.url }}" alt="Current avatar" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-3 border-3 border-gray-100">
+          <img src="{{ form.instance.avatar_url }}" alt="Current avatar" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-3 border-3 border-gray-100">
         {% else %}
           <div class="w-20 h-20 rounded-2xl bg-gray-900 flex items-center justify-center text-white text-3xl font-bold mx-auto mb-3 border-3 border-gray-100">
             {{ form.instance.initials }}

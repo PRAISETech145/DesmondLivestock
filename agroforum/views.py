@@ -44,11 +44,16 @@ def post_list(request):
     page = paginator.get_page(request.GET.get("page"))
     topics = Topic.objects.all()
 
+    # Get feed formula image for static post
+    from django.templatetags.static import static
+    feeds_image_url = static('imgs/feeds.jpg')
+
     context = {
         "page": page,
         "topics": topics,
         "selected_topic": topic_slug,
         "search": search or "",
+        "feeds_image_url": feeds_image_url,
     }
 
     if getattr(request, "htmx", False):
@@ -63,9 +68,14 @@ def post_detail(request, pk):
         pk=pk
     )
 
-    # Increment view count
-    post.view_count += 1
-    post.save(update_fields=["view_count"])
+    # Increment view count (not for author, and only once per session)
+    if request.user != post.author:
+        viewed_posts = request.session.get("viewed_posts", [])
+        if pk not in viewed_posts:
+            post.view_count += 1
+            post.save(update_fields=["view_count"])
+            viewed_posts.append(pk)
+            request.session["viewed_posts"] = viewed_posts
 
     # Get top-level comments with replies prefetched
     comments = post.comments.filter(parent__isnull=True).select_related(
@@ -221,6 +231,11 @@ def post_like(request, pk):
 def comment_like(request, pk):
     """Toggle comment like (HTMX)"""
     comment = get_object_or_404(Comment, pk=pk)
+
+    # Don't allow liking deleted comments
+    if comment.is_deleted:
+        return JsonResponse({"error": "Cannot like a deleted comment"}, status=400)
+
     like, created = CommentLike.objects.get_or_create(comment=comment, user=request.user)
 
     if not created:
@@ -242,12 +257,37 @@ def comment_like(request, pk):
 def comment_reply_form(request, pk):
     """Load reply form for a comment (HTMX)"""
     comment = get_object_or_404(Comment, pk=pk)
+
+    # Don't allow replying to deleted comments
+    if comment.is_deleted:
+        return JsonResponse({"error": "Cannot reply to a deleted comment"}, status=400)
+
     form = CommentForm()
     return render(request, "agroforum/_reply_form.html", {
         "form": form,
         "parent_comment": comment,
         "post": comment.post,
     })
+
+
+@login_required
+@require_POST
+def comment_delete(request, pk):
+    """Delete own comment/reply (HTMX)"""
+    comment = get_object_or_404(Comment, pk=pk, author=request.user)
+    post_pk = comment.post.pk
+    comment.is_deleted = True
+    comment.content = ""
+    comment.save(update_fields=["is_deleted", "content", "updated_at"])
+
+    if getattr(request, "htmx", False):
+        # Return empty response or updated comment
+        return render(request, "agroforum/_comment.html", {
+            "comment": comment,
+            "user": request.user,
+            "depth": comment.get_depth(),
+        })
+    return redirect("agroforum:post_detail", pk=post_pk)
 
 
 @login_required

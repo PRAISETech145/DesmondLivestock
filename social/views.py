@@ -18,14 +18,10 @@ def user_list(request):
         return redirect(f"{settings.LOGIN_URL}?next={request.path}")
 
     # Get users the current user follows (Follow objects)
-    following_qs = request.user.following.select_related("followed").prefetch_related(
-        "followed__avatar"
-    ).order_by("-created_at")
+    following_qs = request.user.following.select_related("followed").order_by("-created_at")
 
     # Get users who follow the current user (Follow objects)
-    followers_qs = request.user.followers.select_related("follower").prefetch_related(
-        "follower__avatar"
-    ).order_by("-created_at")
+    followers_qs = request.user.followers.select_related("follower").order_by("-created_at")
 
     # Add follow status: for following tab, we already follow them (True).
     # For followers tab, check if we follow them back.
@@ -84,12 +80,8 @@ def user_detail(request, username):
         ).exists()
 
     # Get followers and following for tabs
-    followers = user_obj.followers.select_related("follower").prefetch_related(
-        "follower__avatar"
-    )
-    following = user_obj.following.select_related("followed").prefetch_related(
-        "followed__avatar"
-    )
+    followers = user_obj.followers.select_related("follower")
+    following = user_obj.following.select_related("followed")
 
     context = {
         "profile_user": user_obj,
@@ -104,11 +96,14 @@ def user_detail(request, username):
 @login_required
 @require_POST
 def follow_user(request, username):
-    """Follow a user (HTMX)."""
+    """Follow a user (HTMX) - redirect to people page with success message."""
     target = get_object_or_404(CustomUser, username=username)
 
     if target == request.user:
-        return JsonResponse({"error": "Cannot follow yourself"}, status=400)
+        if getattr(request, "htmx", False):
+            return JsonResponse({"error": "Cannot follow yourself"}, status=400)
+        messages.error(request, "You cannot follow yourself.")
+        return redirect("social:user_list")
 
     follow, created = Follow.objects.get_or_create(
         follower=request.user, followed=target
@@ -117,29 +112,22 @@ def follow_user(request, username):
     if not created:
         follow.delete()
         is_following = False
+        action = "unfollowed"
     else:
         is_following = True
+        action = "followed"
 
-    if getattr(request, "htmx", False):
-        return render(request, "social/_follow_button.html", {
-            "profile_user": target,
-            "is_following": is_following,
-            "is_self": False,
-            "followers_count": target.followers.count(),
-        })
+    # Add success message
+    messages.success(request, f"You have {action} {target.username}.")
 
-    return JsonResponse({
-        "is_following": is_following,
-        "followers_count": target.followers.count(),
-    })
+    # Always redirect to people page to show the updated follow lists
+    return redirect("social:user_list")
 
 
 def user_followers(request, username):
     """List users who follow the given user."""
     user_obj = get_object_or_404(CustomUser, username=username)
-    followers = user_obj.followers.select_related("follower").prefetch_related(
-        "follower__avatar"
-    )
+    followers = user_obj.followers.select_related("follower")
 
     paginator = Paginator(followers, 20)
     page = paginator.get_page(request.GET.get("page"))
@@ -151,9 +139,7 @@ def user_followers(request, username):
 def user_following(request, username):
     """List users the given user follows."""
     user_obj = get_object_or_404(CustomUser, username=username)
-    following = user_obj.following.select_related("followed").prefetch_related(
-        "followed__avatar"
-    )
+    following = user_obj.following.select_related("followed")
 
     paginator = Paginator(following, 20)
     page = paginator.get_page(request.GET.get("page"))

@@ -48,7 +48,7 @@
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-3 mb-2">
             {% if post.author.avatar %}
-            <img src="{{ post.author.avatar.url }}" alt="{{ post.author.username }}" class="w-8 h-8 rounded-full object-cover">
+            <img src="{{ post.author.avatar_url }}" alt="{{ post.author.username }}" class="w-8 h-8 rounded-full object-cover">
             {% else %}
             <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-sm">
               {{ post.author.initials }}
@@ -69,9 +69,26 @@
           <!-- Follow button -->
           {% if user.is_authenticated and user != post.author %}
           <div class="mt-2 follow-button-container">
-            {% with profile_user=post.author is_following=post.author.is_following is_self=False %}
-            {% include "social/_follow_button.html" %}
-            {% endwith %}
+            <form action="{% url 'social:follow_user' post.author.username %}" method="post">
+              {% csrf_token %}
+              {% with profile_user=post.author is_following=post.author.is_following is_self=False %}
+              {% if post.author.is_following %}
+              <button type="submit"
+                      class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors"
+                      aria-label="Unfollow {{ post.author.username }}">
+                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 19V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14"></path></svg>
+                Following
+              </button>
+              {% else %}
+              <button type="submit"
+                      class="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors"
+                      aria-label="Follow {{ post.author.username }}">
+                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                Follow
+              </button>
+              {% endif %}
+              {% endwith %}
+            </form>
           </div>
           {% endif %}
 
@@ -85,7 +102,7 @@
 
           <div class="flex items-center gap-4 text-sm text-gray-500">
             <span class="flex items-center gap-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path></svg>
               {{ post.like_count }}
             </span>
             <a href="{{ post.get_absolute_url }}" class="flex items-center gap-1 hover:text-gray-700 transition-colors">

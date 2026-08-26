@@ -6,7 +6,7 @@
     <div class="flex items-center gap-3 mb-4">
       <a href="{% url 'social:user_detail' user.username %}">
         {% if user.avatar %}
-        <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="w-14 h-14 rounded-full object-cover">
+        <img src="{{ user.avatar_url }}" alt="{{ user.username }}" class="w-14 h-14 rounded-full object-cover">
         {% else %}
         <div class="w-14 h-14 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-lg">
           {{ user.initials }}
