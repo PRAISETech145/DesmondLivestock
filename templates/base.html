@@ -143,7 +143,7 @@
   {% block extra_js %}{% endblock %}
 
 {% if user.is_authenticated %}
-<div id="profile-dropdown-portal" class="fixed inset-0 z-60 pointer-events-none" aria-hidden="true">
+<div id="profile-dropdown-portal" class="fixed inset-0 z-[9999] pointer-events-none isolate" aria-hidden="true">
   <div id="profile-menu-portal" class="absolute right-4 top-16 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 opacity-0 invisible transform translate-y-2 transition-all duration-200 pointer-events-auto">
     <div class="px-4 py-3 border-b border-gray-100 flex items-center gap-2">
       <p class="font-semibold text-gray-900 text-sm">{{ user.username }}</p>
