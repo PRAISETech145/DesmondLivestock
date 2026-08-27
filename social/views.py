@@ -23,6 +23,21 @@ def user_list(request):
     # Get users who follow the current user (Follow objects)
     followers_qs = request.user.followers.select_related("follower").order_by("-created_at")
 
+    # Search
+    search = request.GET.get("q")
+    if search:
+        from django.db.models import Q
+        following_qs = following_qs.filter(
+            Q(followed__username__icontains=search) |
+            Q(followed__first_name__icontains=search) |
+            Q(followed__last_name__icontains=search)
+        )
+        followers_qs = followers_qs.filter(
+            Q(follower__username__icontains=search) |
+            Q(follower__first_name__icontains=search) |
+            Q(follower__last_name__icontains=search)
+        )
+
     # Add follow status: for following tab, we already follow them (True).
     # For followers tab, check if we follow them back.
     if request.user.is_authenticated:
@@ -51,12 +66,13 @@ def user_list(request):
         "following_page": following_page,
         "followers_page": followers_page,
         "active_tab": tab,
+        "search": search or "",
     }
 
     if getattr(request, "htmx", False):
         if tab == "followers":
-            return render(request, "social/_follow_list.html", {"page": followers_page, "tab": "followers", "profile_user": request.user})
-        return render(request, "social/_follow_list.html", {"page": following_page, "tab": "following", "profile_user": request.user})
+            return render(request, "social/_follow_list.html", {"page": followers_page, "tab": "followers", "profile_user": request.user, "search": search or ""})
+        return render(request, "social/_follow_list.html", {"page": following_page, "tab": "following", "profile_user": request.user, "search": search or ""})
 
     return render(request, "social/user_list.html", context)
 
@@ -79,16 +95,40 @@ def user_detail(request, username):
             follower=request.user, followed=user_obj
         ).exists()
 
-    # Get followers and following for tabs
-    followers = user_obj.followers.select_related("follower")
-    following = user_obj.following.select_related("followed")
+    tab = request.GET.get("tab", "followers")
+
+    # Get followers and following for tabs with search
+    search = request.GET.get("q")
+    if tab == "followers":
+        qs = user_obj.followers.select_related("follower")
+        if search:
+            from django.db.models import Q
+            qs = qs.filter(
+                Q(follower__username__icontains=search) |
+                Q(follower__first_name__icontains=search) |
+                Q(follower__last_name__icontains=search)
+            )
+        paginator = Paginator(qs, 20)
+        page = paginator.get_page(request.GET.get("page"))
+    else:
+        qs = user_obj.following.select_related("followed")
+        if search:
+            from django.db.models import Q
+            qs = qs.filter(
+                Q(followed__username__icontains=search) |
+                Q(followed__first_name__icontains=search) |
+                Q(followed__last_name__icontains=search)
+            )
+        paginator = Paginator(qs, 20)
+        page = paginator.get_page(request.GET.get("page"))
 
     context = {
         "profile_user": user_obj,
         "is_following": is_following,
         "is_self": is_self,
-        "followers": followers,
-        "following": following,
+        "tab": tab,
+        "page": page,
+        "search": search or "",
     }
     return render(request, "social/user_detail.html", context)
 
@@ -129,10 +169,20 @@ def user_followers(request, username):
     user_obj = get_object_or_404(CustomUser, username=username)
     followers = user_obj.followers.select_related("follower")
 
+    # Search
+    search = request.GET.get("q")
+    if search:
+        from django.db.models import Q
+        followers = followers.filter(
+            Q(follower__username__icontains=search) |
+            Q(follower__first_name__icontains=search) |
+            Q(follower__last_name__icontains=search)
+        )
+
     paginator = Paginator(followers, 20)
     page = paginator.get_page(request.GET.get("page"))
 
-    context = {"profile_user": user_obj, "page": page, "tab": "followers"}
+    context = {"profile_user": user_obj, "page": page, "tab": "followers", "search": search or ""}
     return render(request, "social/_follow_list.html", context)
 
 
@@ -141,8 +191,18 @@ def user_following(request, username):
     user_obj = get_object_or_404(CustomUser, username=username)
     following = user_obj.following.select_related("followed")
 
+    # Search
+    search = request.GET.get("q")
+    if search:
+        from django.db.models import Q
+        following = following.filter(
+            Q(followed__username__icontains=search) |
+            Q(followed__first_name__icontains=search) |
+            Q(followed__last_name__icontains=search)
+        )
+
     paginator = Paginator(following, 20)
     page = paginator.get_page(request.GET.get("page"))
 
-    context = {"profile_user": user_obj, "page": page, "tab": "following"}
+    context = {"profile_user": user_obj, "page": page, "tab": "following", "search": search or ""}
     return render(request, "social/_follow_list.html", context)

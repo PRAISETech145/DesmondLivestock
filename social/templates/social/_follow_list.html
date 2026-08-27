@@ -17,7 +17,7 @@
 {% if page.has_next %}
 <div class="text-center mt-6">
   <button
-    hx-get="?page={{ page.next_page_number }}"
+    hx-get="?page={{ page.next_page_number }}{% if search %}&q={{ search }}{% endif %}"
     hx-target="#follow-list"
     hx-swap="outerHTML"
     hx-indicator="#load-more-spinner"

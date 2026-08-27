@@ -302,6 +302,11 @@ def topic_detail(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
     posts = topic.posts.select_related("author").prefetch_related("likes")
 
+    # Search
+    search = request.GET.get("q")
+    if search:
+        posts = posts.filter(title__icontains=search) | posts.filter(content__icontains=search)
+
     # Add user_liked attribute for template
     if request.user.is_authenticated:
         liked_post_ids = set(PostLike.objects.filter(
@@ -325,5 +330,6 @@ def topic_detail(request, slug):
         "topic": topic,
         "page": page,
         "topics": Topic.objects.all(),
+        "search": search or "",
     }
     return render(request, "agroforum/topic_detail.html", context)

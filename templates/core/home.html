@@ -79,6 +79,13 @@
     transition: none;
   }
 }
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 </style>
 {% endblock %}
 
@@ -205,6 +212,55 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
   <!-- Main Feed Column (3/4 width) -->
   <main class="lg:col-span-3">
+    <!-- Categories Scrollable Bar -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Browse by Category</h2>
+      <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
+        <!-- Feed Formula CTA - First in the scroll bar -->
+        <a href="https://wa.me/237652807409?text=Hi%2C%20I%27m%20interested%20in%20a%20custom%20feed%20formula%20for%20my%20livestock."
+           target="_blank" rel="noopener"
+           class="group flex-shrink-0 w-48 sm:w-56 relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+          <div class="relative aspect-square overflow-hidden">
+            <img src="{% static 'imgs/feeds.jpg' %}" alt="Feed Formula" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <h4 class="font-semibold text-white truncate">Need a Feed Formula?</h4>
+          </div>
+        </a>
+        {% for c in categories %}
+        <a href="{% url 'listings:list' %}?category={{ c.slug }}"
+           class="group flex-shrink-0 w-48 sm:w-56 relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gray-300 hover:shadow-xl transition-all duration-300">
+          <div class="relative aspect-square overflow-hidden">
+            {% if c.slug == "cattle" or c.name == "Cattle" %}
+              <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="Cattle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% elif c.slug == "goats" or c.name == "Goats" %}
+              <img src="{% static 'imgs/240_F_2114489603_TmveN8HJB1cTELfjEu6BoaWt2dz6g22w.jpg' %}" alt="Goats" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% elif c.slug == "poultry" or c.name == "Poultry" %}
+              <img src="{% static 'imgs/303727_chickenfarmcagegettyimages184362512_954731_crop.jpg' %}" alt="Poultry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% elif c.slug == "plant" or c.name == "Plant" %}
+              <img src="{% static 'imgs/plant.jpg' %}" alt="Plant" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% elif c.slug == "animal" or c.name == "Animal" %}
+              <img src="{% static 'imgs/animal.jpg' %}" alt="Animal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% elif c.slug == "feed-formula" or c.slug == "feed" or c.slug == "feed-formular" or c.name|lower == "feed formula" or c.name|lower == "feed" %}
+              <img src="{% static 'imgs/feeds.jpg' %}" alt="Feed Formula" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% else %}
+              <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                <span class="text-4xl">🐄</span>
+              </div>
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <h4 class="font-semibold text-white truncate">{{ c.name }}</h4>
+          </div>
+        </a>
+        {% empty %}
+        <p class="text-center text-gray-500 py-4 w-full">No categories available.</p>
+        {% endfor %}
+      </div>
+    </section>
+
     <!-- Featured Listings -->
     <section class="mb-12">
       <div class="flex items-center justify-between mb-6">
@@ -380,64 +436,6 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Sidebar: Categories (1/4 width) -->
   <aside class="lg:col-span-1">
     <div class="sticky top-24 space-y-4">
-      <div class="bg-white border border-gray-200 rounded-2xl p-5">
-        <h3 class="font-semibold text-lg text-gray-900 mb-4">Browse by Category</h3>
-        <div class="space-y-3">
-          {% for c in categories %}
-          <a href="{% url 'listings:list' %}?category={{ c.slug }}"
-             class="group block bg-gray-50 border border-gray-100 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all duration-300">
-            <div class="relative aspect-video overflow-hidden">
-              {% if c.slug == "cattle" or c.name == "Cattle" %}
-                <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="Cattle" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              {% elif c.slug == "goats" or c.name == "Goats" %}
-                <img src="{% static 'imgs/240_F_2114489603_TmveN8HJB1cTELfjEu6BoaWt2dz6g22w.jpg' %}" alt="Goats" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              {% elif c.slug == "poultry" or c.name == "Poultry" %}
-                <img src="{% static 'imgs/303727_chickenfarmcagegettyimages184362512_954731_crop.jpg' %}" alt="Poultry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              {% elif c.slug == "plant" or c.name == "Plant" %}
-                <img src="{% static 'imgs/plant.jpg' %}" alt="Plant" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              {% elif c.slug == "animal" or c.name == "Animal" %}
-                <img src="{% static 'imgs/animal.jpg' %}" alt="Animal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              {% elif c.slug == "feed-formula" or c.slug == "feed" or c.slug == "feed-formular" or c.name|lower == "feed formula" or c.name|lower == "feed" %}
-                <img src="{% static 'imgs/feeds.jpg' %}" alt="Feed Formula" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-              {% else %}
-                <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <span class="text-4xl">🐄</span>
-                </div>
-              {% endif %}
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-            </div>
-            <div class="p-3 lg:p-4">
-              <h4 class="font-semibold text-white relative z-10 -mt-8 px-2 truncate">
-                {{ c.name }}
-              </h4>
-            </div>
-          </a>
-          {% empty %}
-          <p class="text-center text-gray-500 py-4">No categories available.</p>
-          {% endfor %}
-        </div>
-      </div>
-
-      <!-- Feed Formula WhatsApp CTA -->
-      <div class="bg-gradient-to-br from-green-600 to-green-700 rounded-2xl p-5">
-        <a href="https://wa.me/237652807409?text=Hi%2C%20I%27m%20interested%20in%20a%20custom%20feed%20formula%20for%20my%20livestock."
-           target="_blank" rel="noopener"
-           class="block hover:opacity-90 transition-opacity">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.75 12.5c-.17-.33-.33-.42-.58-.5-.25-.17-.42-.21-.5-.21-.17 0-.33-.08-.42-.08-.08 0-.17-.04-.25-.04-.25 0-.5-.08-.75-.25-.17-.08-.33-.25-.5-.5-.17-.17-.42-.5.42-.75 0-.17.08-.25.08-.42 0-.08-.08-.17-.08-.33-.08-.33-.25-.42-.42-.33-.17-.08-.42-.08-.58-.17-.33-.08-.67-.08-1 0-.33 0-.58.08-.75.08-.17.08-.33.17-.5.17-.25.25-.42.42-.58.5-.17.25-.17.42-.08.5.17.17.42.17.58.33.58.75.33 1.83.42 2.25.08.33-.17.5-.33.67-.5.08-.17.08-.25.08-.33 0-.25-.08-.33-.17-.33-.17 0-.5-.08-.75-.17-.17-.08-.42-.21-.67-.33 0 0-.58-.08-1.25-.42-.17-.17-.25-.25-.25-.42 0-.17.25-.33.33-.5.25-.17.58-.33.92-.42.33-.08.75-.17 1-.25.33-.08.67-.08 1-.08.33 0 .58.08.83.17.42.08.67.25.75.33.17.17.25.42.25.67 0 .25-.17.42-.25.58-.17.25-.58.58-1.5 1.75-.58.67-1 1.08-1.25 1.17-.17.08-.25.08-.42.08-.17 0-.33-.04-.42-.04-.17 0-.33-.04-.5-.17zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm5.5-10.75c0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 .08.04.25.13.33-.5.25-.83.67-1 .92-.08.25-.17.42-.25.5-.17.17-.42.17-.58.17-.25 0-.42-.08-.58-.25-.17-.17-.25-.33-.25-.5 0-.25.17-.42.33-.58.5-.67 1.25-1.5 2.25-2.25.25-.17.42-.25.67-.25.33 0 .5.08.67.17.42.08.67.25.83.5.08.25.08.58.08.83s-.04.5-.08.58c-.04.08-.17.17-.25.33-.17.17-.33.17-.5.17-.33 0-.58-.08-.75-.08h-1.75c-.33 0-.58-.08-.83-.17-.25-.25-.33-.5-.33-.75 0-.33.25-.58.42-.75.25-.17.67-.33 1.25-.5.17 0 .33-.08.5-.08.17 0 .33.04.58.08.25.04.42.17.58.25.25.17.42.33.58.58l.08.25c0 .17.04.33.17.42.08.08.21.17.33.25.33.17.33.17.25.17-.08 0-.17 0-.25-.17-.17-.17-.33-.25-.5-.25-.17 0-.33 0-.5.08h-.5c-.33 0-.58-.08-.83-.17-.25-.25-.33-.5-.33-.75 0-.33.25-.58.42-.75.25-.17.67-.33 1.25-.5.17 0 .33-.08.5-.08.17 0 .33.04.58.08.25.04.42.17.58.25.25.17.42.33.58.58l.08.25c0 .17.04.33.17.42.08.08.21.17.33.25.33.17.33.17.25.17-.08 0-.17 0-.25-.17-.17-.17-.33-.25-.5-.25-.17 0-.33 0-.5.08h-.5c-.17 0-.33-.08-.5-.17-.17-.08-.25-.25-.25-.5 0-.08.04-.17.08-.25.08-.08.83-.92 1.5-1.92.33-.5.67-1 1.08-1.42.17-.25.25-.42.33-.58.08-.17.08-.25.08-.33s-.08-.25-.17-.33c-.17-.17-.42-.17-.67-.17-.42 0-.75.17-.92.33-.33.25-.42.58-.33 1 .08.25.17.58.17.67 0 .17-.08.33-.08.5 0 .25-.08.42-.17.58z"></path></svg>
-            </div>
-            <div>
-              <h4 class="font-semibold text-white">Need a Feed Formula?</h4>
-              <p class="text-xs text-green-100">Custom nutrition for your livestock</p>
-            </div>
-          </div>
-          <span class="inline-flex items-center gap-2 bg-white text-green-700 px-4 py-2 rounded-lg font-semibold text-sm hover:bg-green-50 transition-colors">
-            Chat on WhatsApp
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
-          </span>
-        </a>
-      </div>
 
       <!-- CTA Card -->
 

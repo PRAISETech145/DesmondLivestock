@@ -35,6 +35,22 @@
   </div>
   {% endif %}
 
+  <!-- Search Bar -->
+  <form hx-get="{% url 'agroforum:topic' topic.slug %}"
+        hx-target=".space-y-4"
+        hx-push-url="true"
+        hx-trigger="search, keyup changed delay:300ms from:input"
+        class="mb-6">
+    <label for="search-input" class="sr-only">Search posts in this topic</label>
+    <div class="relative max-w-md mx-auto sm:max-w-lg">
+      <img src="{% static 'imgs/search.svg' %}" alt=""
+           class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none">
+      <input type="search" name="q" id="search-input"
+             placeholder="Search posts in {{ topic.name }}..."
+             class="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all text-sm sm:text-base">
+    </div>
+  </form>
+
   <!-- Posts List -->
   <div class="space-y-4">
     {% for post in page %}
@@ -132,7 +148,7 @@
   {% if page.has_next %}
   <div class="text-center mt-8">
     <button
-      hx-get="?page={{ page.next_page_number }}"
+      hx-get="?page={{ page.next_page_number }}{% if search %}&q={{ search }}{% endif %}"
       hx-target="closest .space-y-4"
       hx-swap="beforeend"
       hx-select="article, div.col-span-full"
