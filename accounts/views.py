@@ -70,7 +70,7 @@ The Livestock Marketplace Team
             message,
             None,  # Uses DEFAULT_FROM_EMAIL
             [user.email],
-            fail_silently=False,
+            fail_silently=True,
         )
     except Exception:
         # Log error but don't fail the signup
