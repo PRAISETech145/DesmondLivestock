@@ -182,16 +182,21 @@ if not DEBUG:
         origin.strip() for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if origin.strip()
     ]
 
-# Email
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+# Email - Use console backend if SMTP not fully configured
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Livestock Marketplace <noreply@example.com>")
-# Connection timeout (seconds) to prevent worker hangs when SMTP is unreachable
-EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+
+# Only use SMTP if all required settings are provided
+if all([EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD]):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+else:
+    # Development/fallback: print emails to console
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Redis / Celery
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
