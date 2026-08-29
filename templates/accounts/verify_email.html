@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Verify Email - Livestock Market{% endblock %}
+
+{% block header_bg %}
+<img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="" class="w-full h-full object-cover opacity-40">
+{% endblock %}
+
+{% block hero %}
+<div class="relative z-10 flex min-h-[calc(100vh-header-height)] items-center justify-center px-3 py-8 sm:px-4 sm:py-12" style="--header-height: 4rem;">
+  <div class="max-w-md w-full">
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl text-center">
+      {% if success %}
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Email Verified!</h2>
+      <p class="text-gray-600 mb-6">{{ message }}</p>
+      <a href="{% url 'accounts:login' %}" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-700 transition-colors touch-manipulation inline-block">
+        Log In
+      </a>
+      {% else %}
+      <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Verification Failed</h2>
+      <p class="text-gray-600 mb-6">{{ message }}</p>
+      <a href="{% url 'accounts:signup' %}" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-700 transition-colors touch-manipulation inline-block">
+        Sign Up Again
+      </a>
+      <p class="mt-4 text-sm text-gray-500">
+        Need a new link? <a href="{% url 'accounts:resend_verification' %}" class="text-gray-900 font-medium hover:text-gray-700">Request one here</a>
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}

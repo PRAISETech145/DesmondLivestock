@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Check Your Email - Livestock Market{% endblock %}
+
+{% block header_bg %}
+<img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="" class="w-full h-full object-cover opacity-40">
+{% endblock %}
+
+{% block hero %}
+<div class="relative z-10 flex min-h-[calc(100vh-header-height)] items-center justify-center px-3 py-8 sm:px-4 sm:py-12" style="--header-height: 4rem;">
+  <div class="max-w-md w-full">
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl text-center">
+      <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Check Your Email</h2>
+      <p class="text-gray-600 mb-6">
+        We've sent a verification email to your inbox. Please click the link in the email to verify your account.
+      </p>
+
+      {% if resent %}
+      <div class="bg-green-50 border border-green-200 rounded-xl p-3 sm:p-4 mb-4">
+        <p class="text-green-700 text-sm">A new verification email has been sent!</p>
+      </div>
+      {% endif %}
+
+      <div class="bg-gray-50 rounded-xl p-4 mb-4 text-left">
+        <p class="text-sm text-gray-600 mb-2">Didn't receive the email?</p>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li>• Check your spam/junk folder</li>
+          <li>• Make sure you entered the correct email address</li>
+          <li>• Wait a few minutes for delivery</li>
+        </ul>
+      </div>
+
+      <form method="post" action="{% url 'accounts:resend_verification' %}" class="space-y-4">
+        {% csrf_token %}
+        <button type="submit"
+                class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-700 transition-colors touch-manipulation">
+          Resend Verification Email
+        </button>
+      </form>
+
+      <p class="text-center text-gray-500 text-sm sm:text-base mt-5">
+        Already verified? <a href="{% url 'accounts:login' %}" class="text-gray-900 font-medium hover:text-gray-700">Log in</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}

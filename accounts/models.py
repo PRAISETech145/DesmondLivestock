@@ -17,6 +17,7 @@ class CustomUser(AbstractUser):
     in the Django admin for their own account (and any staff
     they trust). Regular buyers never see a "become a seller" option.
     """
+    email = models.EmailField(unique=True)
     is_seller = models.BooleanField(default=False)
     phone = models.CharField(max_length=20, blank=True)
     avatar = CloudinaryField('image', folder='avatars/', blank=True, null=True)
@@ -27,6 +28,11 @@ class CustomUser(AbstractUser):
     is_verified = models.BooleanField(default=False)
     verified_at = models.DateTimeField(null=True, blank=True)
     verification_notes = models.TextField(blank=True, max_length=500, help_text="Admin notes about verification")
+
+    # Email verification
+    email_verified = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=64, blank=True, null=True)
+    email_verification_sent_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.username
