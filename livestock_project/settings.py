@@ -44,6 +44,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -126,6 +127,15 @@ TIME_ZONE = "Africa/Douala"
 USE_I18N = True
 USE_TZ = True
 
+LANGUAGES = [
+    ("en", "English"),
+    ("fr", "Français"),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
+
 # Static files
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -197,7 +207,8 @@ if all([EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD]):
 else:
     # Development/fallback: print emails to console
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
+print(f"Using email backend: {EMAIL_BACKEND}")
+print(f"EMAIL_HOST set: {bool(EMAIL_HOST)}, EMAIL_HOST_USER set: {bool(EMAIL_HOST_USER)}, EMAIL_HOST_PASSWORD set: {bool(EMAIL_HOST_PASSWORD)}")
 # Redis / Celery
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
 

@@ -1,0 +1,230 @@
+# French translations for livestock marketplace
+msgid ""
+msgstr ""
+"Project-Id-Version: livestock_marketplace\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-30 00:00+0000\n"
+"PO-Revision-Date: 2026-08-30 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/base.html
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/base.html
+msgid "Browse Listings"
+msgstr "Parcourir les Annonces"
+
+#: templates/base.html
+msgid "AgroForum"
+msgstr "AgroForum"
+
+#: templates/base.html
+msgid "People"
+msgstr "Personnes"
+
+#: templates/base.html
+msgid "Post Livestock"
+msgstr "Publier du Bétail"
+
+#: templates/base.html
+msgid "Login"
+msgstr "Connexion"
+
+#: templates/base.html
+msgid "Sign Up"
+msgstr "S'inscrire"
+
+#: templates/base.html
+msgid "Profile"
+msgstr "Profil"
+
+#: templates/base.html
+msgid "My Listings"
+msgstr "Mes Annonces"
+
+#: templates/base.html
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: templates/base.html
+msgid "Verified"
+msgstr "Vérifié"
+
+#: templates/core/home.html
+msgid "Featured Listings"
+msgstr "Annonces Vedettes"
+
+#: templates/core/home.html
+msgid "Browse by Category"
+msgstr "Parcourir par Catégorie"
+
+#: templates/core/home.html
+msgid "Latest Forum Discussions"
+msgstr "Dernières Discussions du Forum"
+
+#: templates/core/home.html
+msgid "No listings available"
+msgstr "Aucune annonce disponible"
+
+#: templates/listings/list.html
+msgid "All Listings"
+msgstr "Toutes les Annonces"
+
+#: templates/listings/list.html
+msgid "Filter"
+msgstr "Filtrer"
+
+#: templates/listings/list.html
+msgid "Category"
+msgstr "Catégorie"
+
+#: templates/listings/list.html
+msgid "Location"
+msgstr "Localisation"
+
+#: templates/listings/list.html
+msgid "Price Range"
+msgstr "Fourchette de Prix"
+
+#: templates/listings/list.html
+msgid "Sort by"
+msgstr "Trier par"
+
+#: templates/listings/list.html
+msgid "Newest"
+msgstr "Plus Récent"
+
+#: templates/listings/list.html
+msgid "Oldest"
+msgstr "Plus Ancien"
+
+#: templates/listings/list.html
+msgid "Price: Low to High"
+msgstr "Prix: Croissant"
+
+#: templates/listings/list.html
+msgid "Price: High to Low"
+msgstr "Prix: Décroissant"
+
+#: templates/listings/detail.html
+msgid "Contact Seller"
+msgstr "Contacter le Vendeur"
+
+#: templates/listings/detail.html
+msgid "Description"
+msgstr "Description"
+
+#: templates/listings/detail.html
+msgid "Location"
+msgstr "Localisation"
+
+#: templates/listings/detail.html
+msgid "Category"
+msgstr "Catégorie"
+
+#: templates/listings/detail.html
+msgid "Posted"
+msgstr "Publié le"
+
+#: templates/listings/detail.html
+msgid "Available"
+msgstr "Disponible"
+
+#: templates/listings/detail.html
+msgid "Sold"
+msgstr "Vendu"
+
+#: templates/listings/detail.html
+msgid "Pending"
+msgstr "En Attente"
+
+#: templates/accounts/login.html
+msgid "Welcome Back"
+msgstr "Bon Retour"
+
+#: templates/accounts/login.html
+msgid "Enter your credentials to access your account"
+msgstr "Entrez vos identifiants pour accéder à votre compte"
+
+#: templates/accounts/login.html
+msgid "Email"
+msgstr "Email"
+
+#: templates/accounts/login.html
+msgid "Password"
+msgstr "Mot de passe"
+
+#: templates/accounts/login.html
+msgid "Remember me"
+msgstr "Se souvenir de moi"
+
+#: templates/accounts/login.html
+msgid "Forgot password?"
+msgstr "Mot de passe oublié ?"
+
+#: templates/accounts/login.html
+msgid "Sign In"
+msgstr "Se Connecter"
+
+#: templates/accounts/login.html
+msgid "Don't have an account?"
+msgstr "Pas encore de compte ?"
+
+#: templates/accounts/signup.html
+msgid "Create Account"
+msgstr "Créer un Compte"
+
+#: templates/accounts/signup.html
+msgid "Join the livestock marketplace"
+msgstr "Rejoignez le marché du bétail"
+
+#: templates/accounts/signup.html
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: templates/accounts/signup.html
+msgid "Phone Number (optional)"
+msgstr "Numéro de téléphone (optionnel)"
+
+#: templates/accounts/signup.html
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+
+#: templates/accounts/signup.html
+msgid "I agree to the Terms of Service and Privacy Policy"
+msgstr "J'accepte les Conditions d'Utilisation et la Politique de Confidentialité"
+
+#: templates/accounts/signup.html
+msgid "Create Account"
+msgstr "Créer le Compte"
+
+#: templates/accounts/signup.html
+msgid "Already have an account?"
+msgstr "Déjà un compte ?"
+
+#: templates/agroforum/post_list.html
+msgid "AgroForum Discussions"
+msgstr "Discussions AgroForum"
+
+#: templates/agroforum/post_list.html
+msgid "New Post"
+msgstr "Nouveau Message"
+
+#: templates/agroforum/post_list.html
+msgid "Replies"
+msgstr "Réponses"
+
+#: templates/agroforum/post_list.html
+msgid "Views"
+msgstr "Vues"
+
+#: templates/agroforum/post_list.html
+msgid "Last Activity"
+msgstr "Dernière Activité"

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load i18n %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,6 +43,19 @@
       </div>
 
       <div class="flex items-center gap-2 lg:gap-4">
+        {% get_current_language as LANGUAGE_CODE %}
+        <form action="{% url 'set_language' %}" method="post" class="flex items-center">
+          {% csrf_token %}
+          <input name="next" type="hidden" value="{{ request.path }}">
+          <input name="language" type="hidden" value="{% if LANGUAGE_CODE == 'en' %}fr{% else %}en{% endif %}">
+          <button type="submit" class="p-1 rounded-lg hover:bg-white/10 transition-colors" aria-label="Switch language">
+            {% if LANGUAGE_CODE == 'en' %}
+              <img src="{% static 'imgs/France.svg' %}" alt="Français" class="w-6 h-6 rounded">
+            {% else %}
+              <img src="{% static 'imgs/eng.svg' %}" alt="English" class="w-6 h-6 rounded">
+            {% endif %}
+          </button>
+        </form>
         {% if user.is_authenticated %}
         <div class="relative" id="profile-dropdown-trigger">
           <button id="profile-btn"
@@ -70,6 +84,20 @@
 
     <div id="mobile-menu" class="hidden lg:hidden border-t border-white/10 bg-gray-900/95 backdrop-blur-sm">
       <div class="max-w-6xl mx-auto px-4 py-4 space-y-2">
+        {% get_current_language as LANGUAGE_CODE %}
+        <form action="{% url 'set_language' %}" method="post" class="flex items-center justify-between px-4 py-3">
+          {% csrf_token %}
+          <label class="text-sm font-medium text-gray-200">Language / Langue</label>
+          <input name="next" type="hidden" value="{{ request.path }}">
+          <input name="language" type="hidden" value="{% if LANGUAGE_CODE == 'en' %}fr{% else %}en{% endif %}">
+          <button type="submit" class="p-1 rounded-lg hover:bg-white/10 transition-colors">
+            {% if LANGUAGE_CODE == 'en' %}
+              <img src="{% static 'imgs/France.svg' %}" alt="Français" class="w-6 h-6 rounded">
+            {% else %}
+              <img src="{% static 'imgs/eng.svg' %}" alt="English" class="w-6 h-6 rounded">
+            {% endif %}
+          </button>
+        </form>
         <a href="{% url 'core:home' %}" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-colors">Home</a>
         <a href="{% url 'listings:list' %}" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-colors">Browse Listings</a>
         <a href="{% url 'agroforum:post_list' %}" class="block px-4 py-3 rounded-lg text-sm font-medium text-gray-200 hover:text-white hover:bg-white/10 transition-colors">AgroForum</a>
