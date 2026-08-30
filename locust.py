@@ -9,6 +9,7 @@ import re
 from locust import HttpUser, task, between, tag
 
 
+
 class MarketplaceUser(HttpUser):
     """Simulates a marketplace user browsing and interacting with listings."""
     wait_time = between(1, 3)
