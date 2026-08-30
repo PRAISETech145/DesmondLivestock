@@ -44,7 +44,6 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -127,15 +126,6 @@ TIME_ZONE = "Africa/Douala"
 USE_I18N = True
 USE_TZ = True
 
-LANGUAGES = [
-    ("en", "English"),
-    ("fr", "Français"),
-]
-
-LOCALE_PATHS = [
-    BASE_DIR / "locale",
-]
-
 # Static files
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -200,16 +190,20 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Livestock Marketplace <noreply@example.com>")
 
-# Only use SMTP if all required settings are provided
-if all([EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD]):
+if ENVIRONMENT := os.environ.get("ENVIRONMENT", "development") == "production":
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+    EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+    EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+    EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+    ACCOUNT_EMAIL_SUBJECT_PREFIX = "Livestock Marketplace "
 else:
     # Development/fallback: print emails to console
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-print(f"Using email backend: {EMAIL_BACKEND}")
-print(f"EMAIL_HOST set: {bool(EMAIL_HOST)}, EMAIL_HOST_USER set: {bool(EMAIL_HOST_USER)}, EMAIL_HOST_PASSWORD set: {bool(EMAIL_HOST_PASSWORD)}")
-# Redis / Celery
+    
+
+
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", REDIS_URL)
