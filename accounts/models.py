@@ -9,7 +9,6 @@ def user_avatar_path(instance, filename):
     ext = filename.split(".")[-1]
     return f"avatars/user_{instance.pk}/avatar.{ext}"
 
-
 class CustomUser(AbstractUser):
     """
     is_seller controls who can post livestock.
