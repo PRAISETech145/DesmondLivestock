@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}{{ listing.title }} - Livestock Market{% endblock %}
+{% load static i18n %}
+{% block title %}{{ listing.title }} - {% trans "Livestock Market" %}{% endblock %}
 
 {% block content %}
 <div class="mb-8">
   <a href="{% url 'listings:list' %}"
      class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium text-sm transition-colors">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-    Back to listings
+    {% trans "Back to listings" %}
   </a>
 </div>
 
@@ -51,9 +51,9 @@
         </span>
         {% if listing.posted_by.is_verified %}
         <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full mb-3"
-              title="Verified Seller">
+              title="{% trans 'Verified Seller' %}">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-          Verified Seller
+          {% trans "Verified Seller" %}
         </span>
         {% endif %}
 
@@ -64,31 +64,31 @@
         <div class="grid grid-cols-2 gap-y-4 gap-x-6 mb-6 border-t border-b border-gray-100 py-6">
           {% if listing.breed %}
           <div>
-            <dt class="text-sm text-gray-500 mb-1">Breed</dt>
+            <dt class="text-sm text-gray-500 mb-1">{% trans "Breed" %}</dt>
             <dd class="font-medium text-gray-900">{{ listing.breed }}</dd>
           </div>
           {% endif %}
           {% if listing.age %}
           <div>
-            <dt class="text-sm text-gray-500 mb-1">Age</dt>
+            <dt class="text-sm text-gray-500 mb-1">{% trans "Age" %}</dt>
             <dd class="font-medium text-gray-900">{{ listing.age }}</dd>
           </div>
           {% endif %}
           {% if listing.weight_kg %}
           <div>
-            <dt class="text-sm text-gray-500 mb-1">Weight</dt>
+            <dt class="text-sm text-gray-500 mb-1">{% trans "Weight" %}</dt>
             <dd class="font-medium text-gray-900">{{ listing.weight_kg }} kg</dd>
           </div>
           {% endif %}
           <div>
-            <dt class="text-sm text-gray-500 mb-1">Location</dt>
+            <dt class="text-sm text-gray-500 mb-1">{% trans "Location" %}</dt>
             <dd class="font-medium text-gray-900 flex items-center gap-1">
               <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
               {{ listing.location }}
             </dd>
           </div>
           <div>
-            <dt class="text-sm text-gray-500 mb-1">Status</dt>
+            <dt class="text-sm text-gray-500 mb-1">{% trans "Status" %}</dt>
             <dd>
               <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium
                 {% if listing.status == 'available' %}bg-gray-100 text-gray-800
@@ -101,7 +101,7 @@
         </div>
 
         <div class="mb-6">
-          <h3 class="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Description</h3>
+          <h3 class="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">{% trans "Description" %}</h3>
           <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ listing.description }}</p>
         </div>
 
@@ -110,8 +110,8 @@
           {% if listing.status == "sold" %}
             <div class="bg-gray-100 rounded-xl p-6 text-center">
               <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-              <p class="text-lg font-semibold text-gray-700">This listing has been sold</p>
-              <p class="text-gray-500 mt-1">The livestock is no longer available.</p>
+              <p class="text-lg font-semibold text-gray-700">{% trans "This listing has been sold" %}</p>
+              <p class="text-gray-500 mt-1">{% trans "The livestock is no longer available." %}</p>
             </div>
           {% elif can_contact %}
             <a href="{{ listing.whatsapp_link }}" target="_blank" rel="noopener"
@@ -119,20 +119,20 @@
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.75 12.5c-.17-.33-.33-.42-.58-.5-.25-.17-.42-.21-.5-.21-.17 0-.33-.08-.42-.08-.08 0-.17-.04-.25-.04-.25 0-.5-.08-.75-.25-.17-.08-.33-.25-.5-.5-.17-.17-.42-.5.42-.75 0-.17.08-.25.08-.42 0-.08-.08-.17-.08-.33-.08-.33-.25-.42-.42-.33-.17-.08-.42-.08-.58-.17-.33-.08-.67-.08-1 0-.33 0-.58.08-.75.08-.17.08-.33.17-.5.17-.25.25-.42.42-.58.5-.17.25-.17.42-.08.5.17.17.42.17.58.33.58.75.33 1.83.42 2.25.08.33-.17.5-.33.67-.5.08-.17.08-.25.08-.33 0-.25-.08-.33-.17-.33-.17 0-.5-.08-.75-.17-.17-.08-.42-.21-.67-.33 0 0-.58-.08-1.25-.42-.17-.17-.25-.25-.25-.42 0-.17.25-.33.33-.5.25-.17.58-.33.92-.42.33-.08.75-.17 1-.25.33-.08.67-.08 1-.08.33 0 .58.08.83.17.42.08.67.25.75.33.17.17.25.42.25.67 0 .25-.17.42-.25.58-.17.25-.58.58-1.5 1.75-.58.67-1 1.08-1.25 1.17-.17.08-.25.08-.42.08-.17 0-.33-.04-.42-.04-.17 0-.33-.04-.5-.17zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm5.5-10.75c0-.42-.33-.75-.75-.75s-.75.33-.75.75c0 .08.04.25.13.33-.5.25-.83.67-1 .92-.08.25-.17.42-.25.5-.17.17-.42.17-.58.17-.25 0-.42-.08-.58-.25-.17-.17-.25-.33-.25-.5 0-.25.17-.42.33-.58.5-.67 1.25-1.5 2.25-2.25.25-.17.42-.25.67-.25.33 0 .5.08.67.17.42.08.67.25.83.5.08.25.08.58.08.83s-.04.5-.08.58c-.04.08-.17.17-.25.33-.17.17-.33.17-.5.17-.33 0-.58-.08-.75-.08h-1.75c-.33 0-.58-.08-.83-.17-.25-.25-.33-.5-.33-.75 0-.33.25-.58.42-.75.25-.17.67-.33 1.25-.5.17 0 .33-.08.5-.08.17 0 .33.04.58.08.25.04.42.17.58.25.25.17.42.33.58.58l.08.25c0 .17.04.33.17.42.08.08.21.17.33.25.33.17.33.17.25.17-.08 0-.17 0-.25-.17-.17-.17-.33-.25-.5-.25-.17 0-.33 0-.5.08h-.5c-.17 0-.33-.08-.5-.17-.17-.08-.25-.25-.25-.5 0-.08.04-.17.08-.25.08-.08.83-.92 1.5-1.92.33-.5.67-1 1.08-1.42.17-.25.25-.42.33-.58.08-.17.08-.25.08-.33s-.08-.25-.17-.33c-.17-.17-.42-.17-.67-.17-.42 0-.75.17-.92.33-.33.25-.42.58-.33 1 .08.25.17.58.17.67 0 .17-.08.33-.08.5 0 .25-.08.42-.17.58z"></path></svg>
               Chat on WhatsApp
             </a>
-            <p class="text-xs text-gray-500 text-center mt-3">You'll be redirected to WhatsApp with a pre-filled message.</p>
+            <p class="text-xs text-gray-500 text-center mt-3">{% trans "You'll be redirected to WhatsApp with a pre-filled message." %}</p>
           {% else %}
             <a href="{% url 'accounts:login' %}?next={{ request.path }}"
                class="w-full inline-flex items-center justify-center gap-3 bg-gray-900 text-white px-6 py-4 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-              Log in to Contact Seller
+              {% trans "Log in to Contact Seller" %}
             </a>
-            <p class="text-xs text-gray-500 text-center mt-3">Create an account to view seller contact details and chat on WhatsApp.</p>
+            <p class="text-xs text-gray-500 text-center mt-3">{% trans "Create an account to view seller contact details and chat on WhatsApp." %}</p>
           {% endif %}
 
           {% if user == listing.posted_by %}
             <a href="{% url 'listings:edit' listing.pk %}"
                class="mt-4 block w-full text-center text-sm text-gray-900 hover:text-gray-700 font-medium transition-colors">
-              Edit this listing
+              {% trans "Edit this listing" %}
             </a>
           {% endif %}
         </div>
@@ -144,7 +144,7 @@
 <!-- Seller info section -->
 {% if listing.posted_by %}
 <div class="bg-white border border-gray-200 rounded-2xl p-5 lg:p-6">
-  <h3 class="text-lg font-semibold text-gray-900 mb-4">Posted by</h3>
+  <h3 class="text-lg font-semibold text-gray-900 mb-4">{% trans "Posted by" %}</h3>
   <a href="{% url 'accounts:profile' listing.posted_by.username %}" class="flex items-center gap-3 lg:gap-4 hover:opacity-80 transition-opacity">
     <div class="relative flex-shrink-0">
       {% if listing.posted_by.avatar %}
@@ -172,7 +172,7 @@
       {% if listing.posted_by.phone %}
       <p class="text-sm text-gray-500 truncate">{{ listing.posted_by.phone }}</p>
       {% endif %}
-      <p class="text-xs text-gray-400 mt-1">Member since {{ listing.posted_by.date_joined|date:"F Y" }}</p>
+      <p class="text-xs text-gray-400 mt-1">{% trans "Member since" %} {{ listing.posted_by.date_joined|date:"F Y" }}</p>
     </div>
   </a>
 </div>

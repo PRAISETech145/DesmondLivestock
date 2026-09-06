@@ -34,8 +34,10 @@ msgid "Post Livestock"
 msgstr "Publier du Bétail"
 
 #: templates/base.html
-msgid "Login"
+msgid "Log In"
 msgstr "Connexion"
+
+ 
 
 #: templates/base.html
 msgid "Sign Up"
@@ -81,11 +83,11 @@ msgstr "Toutes les Annonces"
 msgid "Filter"
 msgstr "Filtrer"
 
-#: templates/listings/list.html
+#: templates/listings/list.html templates/listings/detail.html
 msgid "Category"
 msgstr "Catégorie"
 
-#: templates/listings/list.html
+#: templates/listings/list.html templates/listings/detail.html
 msgid "Location"
 msgstr "Localisation"
 
@@ -120,14 +122,6 @@ msgstr "Contacter le Vendeur"
 #: templates/listings/detail.html
 msgid "Description"
 msgstr "Description"
-
-#: templates/listings/detail.html
-msgid "Location"
-msgstr "Localisation"
-
-#: templates/listings/detail.html
-msgid "Category"
-msgstr "Catégorie"
 
 #: templates/listings/detail.html
 msgid "Posted"
@@ -202,10 +196,6 @@ msgid "I agree to the Terms of Service and Privacy Policy"
 msgstr "J'accepte les Conditions d'Utilisation et la Politique de Confidentialité"
 
 #: templates/accounts/signup.html
-msgid "Create Account"
-msgstr "Créer le Compte"
-
-#: templates/accounts/signup.html
 msgid "Already have an account?"
 msgstr "Déjà un compte ?"
 
@@ -228,3 +218,186 @@ msgstr "Vues"
 #: templates/agroforum/post_list.html
 msgid "Last Activity"
 msgstr "Dernière Activité"
+
+#: templates/accounts/login.html
+msgid "Reset it"
+msgstr "Réinitialiser"
+
+#: templates/accounts/login.html
+msgid "Didn't receive verification email?"
+msgstr "Vous n'avez pas reçu l'e-mail de vérification ?"
+
+#: templates/accounts/login.html
+msgid "Resend"
+msgstr "Renvoyer"
+
+#: templates/listings/form.html
+msgid "Details"
+msgstr "Détails"
+
+#: templates/listings/form.html
+msgid "Photos"
+msgstr "Photos"
+
+#: templates/listings/form.html
+msgid "Publish"
+msgstr "Publier"
+
+#: templates/listings/form.html
+msgid "Listing Details"
+msgstr "Détails de l'Annonce"
+
+#: templates/listings/form.html
+msgid "Title"
+msgstr "Titre"
+
+#: templates/listings/form.html
+msgid "Next"
+msgstr "Suivant"
+
+#: templates/listings/form.html
+msgid "Cancel"
+msgstr "Annuler"
+
+ 
+
+#: templates/listings/form.html
+msgid "Status"
+msgstr "Statut"
+
+ 
+
+#: templates/listings/form.html
+msgid "Describe the livestock: breed details, health status, feeding, reason for selling, etc."
+msgstr "Décrivez le bétail : détails sur la race, état de santé, alimentation, raison de la vente, etc."
+
+#: templates/listings/form.html
+msgid "Price (FCFA)"
+msgstr "Prix (FCFA)"
+
+#: templates/listings/form.html
+msgid "FCFA"
+msgstr "FCFA"
+
+#: templates/listings/form.html
+msgid "Breed"
+msgstr "Race"
+
+#: templates/listings/form.html
+msgid "Age"
+msgstr "Âge"
+
+#: templates/listings/form.html
+msgid "Weight (kg)"
+msgstr "Poids (kg)"
+
+#: templates/listings/form.html
+msgid "kg"
+msgstr "kg"
+
+
+#: templates/listings/form.html
+msgid "City, region or area where the livestock is located."
+msgstr "Ville, région ou zone où se trouve le bétail."
+
+#: templates/listings/form.html
+msgid "WhatsApp Number"
+msgstr "Numéro WhatsApp"
+
+#: templates/listings/form.html
+msgid "Digits only with country code (e.g., 237670000000). Buyers click to chat directly."
+msgstr "Chiffres uniquement avec l'indicatif du pays (ex. : 237670000000). Les acheteurs cliquent pour discuter directement."
+
+#: templates/listings/form.html
+msgid "Main Photo"
+msgstr "Photo Principale"
+
+#: templates/listings/form.html
+msgid "Required - Main photo of the livestock"
+msgstr "Requis - Photo principale du bétail"
+
+#: templates/listings/form.html
+msgid "Additional Photo 2"
+msgstr "Photo Supplémentaire 2"
+
+#: templates/listings/form.html
+msgid "Optional - Second angle or close-up"
+msgstr "Optionnel - Deuxième angle ou gros plan"
+
+#: templates/listings/form.html
+msgid "Additional Photo 3"
+msgstr "Photo Supplémentaire 3"
+
+#: templates/listings/form.html
+msgid "Optional - Third angle or detail shot"
+msgstr "Optionnel - Troisième angle ou détail"
+
+#: templates/listings/form.html
+msgid "Existing images will be kept unless you delete them above."
+msgstr "Les images existantes seront conservées sauf si vous les supprimez ci-dessus."
+
+#: templates/listings/form.html
+msgid "Previous"
+msgstr "Précédent"
+
+#: templates/listings/form.html
+msgid "Review & Publish"
+msgstr "Vérifier et Publier"
+
+#: templates/listings/form.html
+msgid "Listing Preview"
+msgstr "Aperçu de l'Annonce"
+
+ 
+
+#: templates/listings/form.html
+msgid "Before publishing:"
+msgstr "Avant de publier :"
+
+#: templates/listings/form.html
+msgid "Ensure all details are accurate"
+msgstr "Assurez-vous que tous les détails sont exacts"
+
+#: templates/listings/form.html
+msgid "Photos clearly show the livestock"
+msgstr "Les photos montrent clairement le bétail"
+
+#: templates/listings/form.html
+msgid "WhatsApp number is correct for buyer contact"
+msgstr "Le numéro WhatsApp est correct pour le contact acheteur"
+
+#: templates/listings/form.html
+msgid "Price is in FCFA"
+msgstr "Le prix est en FCFA"
+
+#: templates/listings/form.html
+msgid "Post Listing"
+msgstr "Publier l'Annonce"
+
+#: templates/core/home.html
+msgid "Quality Livestock, Direct From the Source"
+msgstr "Bétail de Qualité, Directement de la Source"
+
+#: templates/core/home.html
+msgid "Browse healthy cattle, goats, poultry and more. Create an account to contact sellers directly on WhatsApp."
+msgstr "Parcourez des bovins, chèvres, volailles et plus encore, en bonne santé. Créez un compte pour contacter les vendeurs directement sur WhatsApp."
+
+#: templates/core/home.html
+msgid "Browse Livestock"
+msgstr "Parcourir le Bétail"
+
+#: templates/people/list.html
+msgid "Manage your connections. View who you follow and who follows you."
+msgstr "Gérez vos connexions. Voyez qui vous suivez et qui vous suit."
+
+#: templates/people/list.html
+msgid "Search people..."
+msgstr "Rechercher des personnes..."
+
+#: templates/people/list.html
+msgid "Following"
+msgstr "Abonnements"
+
+#: templates/people/list.html
+msgid "Followers"
+msgstr "Abonnés"

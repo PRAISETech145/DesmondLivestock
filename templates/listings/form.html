@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load static i18n %}
 {% load static %}
-{% block title %}{% if listing %}Edit{% else %}Post{% endif %} Livestock - Livestock Market{% endblock %}
+{% block title %}{% if listing %}Edit{% else %}{% trans "Post" %}{% endif %} Livestock - Livestock Market{% endblock %}
 
 {% block hero %}
 <div class="relative z-10 max-w-6xl mx-auto px-4 py-12 lg:py-16 text-center">
-  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">{% if listing %}Edit Listing{% else %}Post New Livestock{% endif %}</h1>
-  <p class="text-gray-200 max-w-2xl mx-auto">{% if listing %}Update your listing details.{% else %}Fill in the details below to create a new listing. You'll need at least one photo.{% endif %}</p>
+  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">{% if listing %}{% trans "Edit Listing" %}{% else %}{% trans "Post New Livestock" %}{% endif %}</h1>
+  <p class="text-gray-200 max-w-2xl mx-auto">{% if listing %}{% trans "Update your listing details." %}{% else %}{% trans "Fill in the details below to create a new listing. You'll need at least one photo." %}{% endif %}</p>
 </div>
 {% endblock %}
 
@@ -18,21 +19,21 @@
         <div class="flex-1">
           <div class="flex items-center gap-2">
             <span class="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold">1</span>
-            <span class="text-sm font-medium text-gray-700 hidden sm:inline">Details</span>
+            <span class="text-sm font-medium text-gray-700 hidden sm:inline">{% trans "Details" %}</span>
           </div>
           <div class="absolute left-4 top-8 h-full w-0.5 bg-gray-200 hidden sm:block"></div>
         </div>
         <div class="flex-1">
           <div class="flex items-center gap-2 justify-center">
             <span class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-bold">2</span>
-            <span class="text-sm font-medium text-gray-500 hidden sm:inline">Photos</span>
+            <span class="text-sm font-medium text-gray-500 hidden sm:inline">{% trans "Photos" %}</span>
           </div>
           <div class="absolute left-4 top-8 h-full w-0.5 bg-gray-200 hidden sm:block"></div>
         </div>
         <div class="flex-1">
           <div class="flex items-center gap-2 justify-end">
             <span class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-bold">3</span>
-            <span class="text-sm font-medium text-gray-500 hidden sm:inline">Publish</span>
+            <span class="text-sm font-medium text-gray-500 hidden sm:inline">{% trans "Publish" %}</span>
           </div>
         </div>
       </div>
@@ -52,12 +53,12 @@
 
       <!-- Step 1: Details -->
       <fieldset class="space-y-6" id="step-details">
-        <legend class="text-lg font-semibold text-gray-900 mb-4">Listing Details</legend>
+        <legend class="text-lg font-semibold text-gray-900 mb-4">{% trans "Listing Details" %}</legend>
 
         <!-- Title -->
         <div>
           <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            Title <span class="text-red-500">*</span>
+            {% trans "Title" %} <span class="text-red-500">*</span>
           </label>
           {{ form.title }}
           {% if form.title.errors %}
@@ -69,16 +70,16 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-              Category <span class="text-red-500">*</span>
+              {% trans "Category" %} <span class="text-red-500">*</span>
             </label>
             {{ form.category }}
-            {% if form.category.errors %}
+             {% if form.category.errors %} 
               <p class="text-red-600 text-sm mt-1">{{ form.category.errors|join:", " }}</p>
             {% endif %}
           </div>
           <div>
             <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-              Status
+              {% trans "Status" %}
             </label>
             {{ form.status }}
             {% if form.status.errors %}
@@ -90,20 +91,20 @@
         <!-- Description -->
         <div>
           <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            Description <span class="text-red-500">*</span>
+           {% trans "Description" %} <span class="text-red-500">*</span>
           </label>
           {{ form.description }}
           {% if form.description.errors %}
             <p class="text-red-600 text-sm mt-1">{{ form.description.errors|join:", " }}</p>
           {% endif %}
-          <p class="text-gray-400 text-sm mt-1">Describe the livestock: breed details, health status, feeding, reason for selling, etc.</p>
+          <p class="text-gray-400 text-sm mt-1">{% trans "Describe the livestock: breed details, health status, feeding, reason for selling, etc." %}</p>
         </div>
 
         <!-- Price, Breed, Age, Weight -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="lg:col-span-2">
             <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-              Price (FCFA) <span class="text-red-500">*</span>
+              {% trans "Price (FCFA)" %} <span class="text-red-500">*</span>
             </label>
             <div class="relative">
               <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">FCFA</span>
@@ -115,7 +116,7 @@
           </div>
           <div>
             <label for="{{ form.breed.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-              Breed
+              {% trans "Breed" %}
             </label>
             {{ form.breed }}
             {% if form.breed.errors %}
@@ -124,7 +125,7 @@
           </div>
           <div>
             <label for="{{ form.age.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-              Age
+              {% trans "Age" %}
             </label>
             {{ form.age }}
             {% if form.age.errors %}
@@ -133,7 +134,7 @@
           </div>
           <div>
             <label for="{{ form.weight_kg.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-              Weight (kg)
+              {% trans "Weight (kg)" %}
             </label>
             <div class="relative">
               {{ form.weight_kg }}
@@ -148,19 +149,19 @@
         <!-- Location -->
         <div>
           <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            Location <span class="text-red-500">*</span>
+            {% trans "Location" %} <span class="text-red-500">*</span>
           </label>
           {{ form.location }}
           {% if form.location.errors %}
             <p class="text-red-600 text-sm mt-1">{{ form.location.errors|join:", " }}</p>
           {% endif %}
-          <p class="text-gray-400 text-sm mt-1">City, region or area where the livestock is located.</p>
+          <p class="text-gray-400 text-sm mt-1">{% trans "City, region or area where the livestock is located." %}</p>
         </div>
 
         <!-- WhatsApp Number -->
         <div>
           <label for="{{ form.whatsapp_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            WhatsApp Number <span class="text-red-500">*</span>
+            {% trans "WhatsApp Number" %} <span class="text-red-500">*</span>
           </label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">+</span>
@@ -169,66 +170,66 @@
           {% if form.whatsapp_number.errors %}
             <p class="text-red-600 text-sm mt-1">{{ form.whatsapp_number.errors|join:", " }}</p>
           {% endif %}
-          <p class="text-gray-400 text-sm mt-1">Digits only with country code (e.g., 237670000000). Buyers click to chat directly.</p>
+          <p class="text-gray-400 text-sm mt-1">{% trans "Digits only with country code (e.g., 237670000000). Buyers click to chat directly." %}</p>
         </div>
       </fieldset>
 
       <!-- Step 2: Photos -->
       <fieldset class="space-y-6 hidden" id="step-photos">
-        <legend class="text-lg font-semibold text-gray-900 mb-4">Photos</legend>
+        <legend class="text-lg font-semibold text-gray-900 mb-4">{% trans "Photos" %}</legend>
 
         <!-- Image 1 (Required) -->
         <div>
           <label for="{{ form.image_1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            Main Photo <span class="text-red-500">*</span>
+            {% trans "Main Photo" %} <span class="text-red-500">*</span>
           </label>
           {{ form.image_1 }}
           {% if form.image_1.errors %}
             <p class="text-red-600 text-sm mt-1">{{ form.image_1.errors|join:", " }}</p>
           {% endif %}
-          <p class="text-gray-400 text-sm mt-1">Required - Main photo of the livestock</p>
+          <p class="text-gray-400 text-sm mt-1">{% trans "Required - Main photo of the livestock" %}</p>
         </div>
 
         <!-- Image 2 (Optional) -->
         <div>
           <label for="{{ form.image_2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            Additional Photo 2
+            {% trans "Additional Photo 2" %}
           </label>
           {{ form.image_2 }}
           {% if form.image_2.errors %}
             <p class="text-red-600 text-sm mt-1">{{ form.image_2.errors|join:", " }}</p>
           {% endif %}
-          <p class="text-gray-400 text-sm mt-1">Optional - Second angle or close-up</p>
+          <p class="text-gray-400 text-sm mt-1">{% trans "Optional - Second angle or close-up" %}</p>
         </div>
 
         <!-- Image 3 (Optional) -->
         <div>
           <label for="{{ form.image_3.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-            Additional Photo 3
+            {% trans "Additional Photo 3" %}
           </label>
           {{ form.image_3 }}
           {% if form.image_3.errors %}
             <p class="text-red-600 text-sm mt-1">{{ form.image_3.errors|join:", " }}</p>
           {% endif %}
-          <p class="text-gray-400 text-sm mt-1">Optional - Third angle or detail shot</p>
+          <p class="text-gray-400 text-sm mt-1">{% trans "Optional - Third angle or detail shot" %}</p>
         </div>
 
-        <p class="text-xs text-gray-400 mt-2">Existing images will be kept unless you delete them above.</p>
+        <p class="text-xs text-gray-400 mt-2">{% trans "Existing images will be kept unless you delete them above." %}</p>
       </fieldset>
 
       <!-- Step 3: Review & Publish -->
       <fieldset class="space-y-6 hidden" id="step-publish">
-        <legend class="text-lg font-semibold text-gray-900 mb-4">Review & Publish</legend>
+        <legend class="text-lg font-semibold text-gray-900 mb-4">{% trans "Review & Publish" %}</legend>
 
         <div class="bg-gray-50 rounded-xl p-6">
-          <h4 class="font-medium text-gray-900 mb-4">Listing Preview</h4>
+          <h4 class="font-medium text-gray-900 mb-4">{% trans "Listing Preview" %}</h4>
           <div id="preview-content" class="space-y-3 text-sm">
-            <p><span class="font-medium text-gray-500">Title:</span> <span id="preview-title" class="text-gray-900">—</span></p>
-            <p><span class="font-medium text-gray-500">Category:</span> <span id="preview-category" class="text-gray-900">—</span></p>
-            <p><span class="font-medium text-gray-500">Price:</span> <span id="preview-price" class="text-gray-900 font-bold">—</span></p>
-            <p><span class="font-medium text-gray-500">Location:</span> <span id="preview-location" class="text-gray-900">—</span></p>
-            <p><span class="font-medium text-gray-500">Status:</span> <span id="preview-status" class="text-gray-900">—</span></p>
-            <p><span class="font-medium text-gray-500">Photos:</span> <span id="preview-photos" class="text-gray-900">—</span></p>
+            <p><span class="font-medium text-gray-500">{% trans "Title" %}</span> <span id="preview-title" class="text-gray-900">—</span></p>
+            <p><span class="font-medium text-gray-500">{% trans "Category" %}</span> <span id="preview-category" class="text-gray-900">—</span></p>
+            <p><span class="font-medium text-gray-500">{% trans "Price (FCFA)" %}</span> <span id="preview-price" class="text-gray-900 font-bold">—</span></p>
+            <p><span class="font-medium text-gray-500">{% trans "Location" %}</span> <span id="preview-location" class="text-gray-900">—</span></p>
+            <p><span class="font-medium text-gray-500">{% trans "Status" %}</span> <span id="preview-status" class="text-gray-900">—</span></p>
+            <p><span class="font-medium text-gray-500">{% trans "Photos" %}</span> <span id="preview-photos" class="text-gray-900">—</span></p>
           </div>
         </div>
 
@@ -236,12 +237,12 @@
           <div class="flex gap-3">
             <svg class="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             <div>
-              <p class="text-sm font-medium text-yellow-800">Before publishing:</p>
+              <p class="text-sm font-medium text-yellow-800">{% trans "Before publishing:" %}</p>
               <ul class="text-xs text-yellow-700 mt-1 space-y-1 list-disc list-inside">
-                <li>Ensure all details are accurate</li>
-                <li>Photos clearly show the livestock</li>
-                <li>WhatsApp number is correct for buyer contact</li>
-                <li>Price is in FCFA</li>
+                <li>{% trans "Ensure all details are accurate" %}</li>
+                <li>{% trans "Photos clearly show the livestock" %}</li>
+                <li>{% trans "WhatsApp number is correct for buyer contact" %}</li>
+                <li>{% trans "Price is in FCFA" %} </li>
               </ul>
             </div>
           </div>
@@ -250,10 +251,10 @@
 
       <!-- Navigation -->
       <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-        <button type="button" id="btn-prev" class="flex-1 bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-200 transition-colors hidden">Previous</button>
-        <button type="button" id="btn-next" class="flex-1 bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors">Next</button>
-        <button type="submit" id="btn-submit" class="flex-1 bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors hidden">{% if listing %}Save Changes{% else %}Post Listing{% endif %}</button>
-        <a href="{% url 'listings:list' %}" id="btn-cancel" class="flex-1 bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-lg text-center hover:bg-gray-200 transition-colors">Cancel</a>
+        <button type="button" id="btn-prev" class="flex-1 bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-200 transition-colors hidden">{% trans "Previous" %}</button>
+        <button type="button" id="btn-next" class="flex-1 bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors">{% trans "Next" %}</button>
+        <button type="submit" id="btn-submit" class="flex-1 bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors hidden">{% if listing %}{% trans "Save Changes" %}{% else %}{% trans "Post Listing" %}{% endif %}</button>
+        <a href="{% url 'listings:list' %}" id="btn-cancel" class="flex-1 bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-lg text-center hover:bg-gray-200 transition-colors">{% trans "Cancel" %}</a>
       </div>
     </form>
   </div>

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}{% if post %}Edit{% else %}Create{% endif %} Post - AgroForum{% endblock %}
+{% load static i18n %}
+{% block title %}{% if post %}{% trans "Edit Post" %}{% else %}{% trans "Create Post" %}{% endif %} - {% trans "AgroForum" %}{% endblock %}
 
 {% block hero %}
 <div class="relative z-10 max-w-6xl mx-auto px-4 py-12 lg:py-16 text-center">
-  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">{% if post %}Edit Post{% else %}New Post{% endif %}</h1>
-  <p class="text-gray-200 max-w-2xl mx-auto">Share your farming challenges, ideas, or experiences with the community.</p>
+  <h1 class="text-3xl lg:text-4xl font-bold text-white mb-3">{% if post %}{% trans "Edit Post" %}{% else %}{% trans "New Post" %}{% endif %}</h1>
+  <p class="text-gray-200 max-w-2xl mx-auto">{% blocktrans %}Share your farming challenges, ideas, or experiences with the community.{% endblocktrans %}</p>
 </div>
 {% endblock %}
 
@@ -26,60 +26,60 @@
       <!-- Topic -->
       <div>
         <label for="{{ form.topic.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-          Topic
+          {% trans "Topic" %}
         </label>
         {{ form.topic }}
         {% if form.topic.errors %}
         <p class="text-red-600 text-sm mt-1">{{ form.topic.errors|join:", " }}</p>
         {% endif %}
-        <p class="text-gray-400 text-sm mt-1">Optional - categorize your post</p>
+        <p class="text-gray-400 text-sm mt-1">{% trans "Optional - categorize your post" %}</p>
       </div>
 
       <!-- Title -->
       <div>
         <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-          Title (optional)
+          {% trans "Title (optional)" %}
         </label>
         {{ form.title }}
         {% if form.title.errors %}
         <p class="text-red-600 text-sm mt-1">{{ form.title.errors|join:", " }}</p>
         {% endif %}
-        <p class="text-gray-400 text-sm mt-1">A short, descriptive title helps others find your post</p>
+        <p class="text-gray-400 text-sm mt-1">{% trans "A short, descriptive title helps others find your post" %}</p>
       </div>
 
       <!-- Content -->
       <div>
         <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-          Content <span class="text-red-500">*</span>
+          {% trans "Content" %} <span class="text-red-500">*</span>
         </label>
         {{ form.content }}
         {% if form.content.errors %}
         <p class="text-red-600 text-sm mt-1">{{ form.content.errors|join:", " }}</p>
         {% endif %}
-        <p class="text-gray-400 text-sm mt-1">Describe your challenge, idea, or experience in detail</p>
+        <p class="text-gray-400 text-sm mt-1">{% trans "Describe your challenge, idea, or experience in detail" %}</p>
       </div>
 
       <!-- Image -->
       <div>
         <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-          Image (optional)
+          {% trans "Image (optional)" %}
         </label>
         {{ form.image }}
         {% if form.image.errors %}
         <p class="text-red-600 text-sm mt-1">{{ form.image.errors|join:", " }}</p>
         {% endif %}
-        <p class="text-gray-400 text-sm mt-1">Add a photo to make your post stand out (JPG, PNG up to 10MB)</p>
+        <p class="text-gray-400 text-sm mt-1">{% trans "Add a photo to make your post stand out (JPG, PNG up to 10MB)" %}</p>
       </div>
 
       <!-- Actions -->
       <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200">
         <button type="submit"
                 class="flex-1 bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-lg hover:bg-gray-700 transition-colors">
-          {% if post %}Save Changes{% else %}Publish Post{% endif %}
+          {% if post %}{% trans "Save Changes" %}{% else %}{% trans "Publish Post" %}{% endif %}
         </button>
         <a href="{% url 'agroforum:post_list' %}"
            class="flex-1 bg-gray-100 text-gray-700 py-3.5 rounded-xl font-semibold text-lg text-center hover:bg-gray-200 transition-colors">
-          Cancel
+          {% trans "Cancel" %}
         </a>
       </div>
     </form>

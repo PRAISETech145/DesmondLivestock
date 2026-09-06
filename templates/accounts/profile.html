@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}{{ profile_user.username }} - Livestock Market{% endblock %}
+{% load static i18n %}
+{% block title %}{{ profile_user.username }} - {% trans "Livestock Market" %}{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
@@ -31,13 +31,13 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ profile_user.username }}</h1>
             {% if profile_user.is_superuser %}
               <span class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
-                Admin
+                {% trans "Admin" %}
               </span>
             {% endif %}
             {% if profile_user.is_verified %}
               <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                Verified Seller
+                {% trans "Verified Seller" %}
               </span>
             {% endif %}
           </div>
@@ -90,12 +90,12 @@
   <div class="flex items-center justify-between mb-6">
     <h2 class="text-2xl font-bold text-gray-900">
       {% if is_own_profile %}
-        Your Listings
+        {% trans "Your Listings" %}
       {% else %}
-        {{ profile_user.username }}'s Listings
+        {{ profile_user.username }}'s {% trans "Listings" %}
       {% endif %}
     </h2>
-    <span class="text-gray-500">{{ listings.count }} listing{{ listings.count|pluralize }}</span>
+    <span class="text-gray-500">{{ listings.count }} {% trans "listing" %}{{ listings.count|pluralize }}</span>
   </div>
 
   {% if listings %}
@@ -143,14 +143,14 @@
     <div class="bg-white border border-gray-200 rounded-2xl p-12 text-center">
       <span class="text-6xl block mb-4">📝</span>
       {% if is_own_profile %}
-        <h3 class="text-xl font-semibold text-gray-700 mb-2">You haven't posted anything yet</h3>
-        <p class="text-gray-500 mb-6">Start selling your livestock by creating your first listing.</p>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">{% trans "You haven't posted anything yet" %}</h3>
+        <p class="text-gray-500 mb-6">{% trans "Start selling your livestock by creating your first listing." %}</p>
         <a href="{% url 'listings:create' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
-          Post Your First Listing
+          {% trans "Post Your First Listing" %}
         </a>
       {% else %}
-        <h3 class="text-xl font-semibold text-gray-700 mb-2">No listings yet</h3>
-        <p class="text-gray-500">{{ profile_user.username }} hasn't posted any livestock yet.</p>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">{% trans "No listings yet" %}</h3>
+        <p class="text-gray-500">{% blocktrans with username=profile_user.username %}{{ username }} hasn't posted any livestock yet.{% endblocktrans %}</p>
       {% endif %}
     </div>
   {% endif %}

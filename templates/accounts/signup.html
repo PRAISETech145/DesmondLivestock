@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Sign Up - Livestock Market{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans "Sign Up" %} - {% trans "Livestock Market" %}{% endblock %}
 
 {% block header_bg %}
 <img src="{% static 'imgs/240_F_2114489603_TmveN8HJB1cTELfjEu6BoaWt2dz6g22w.jpg' %}" alt="" class="w-full h-full object-cover opacity-40">
@@ -10,7 +10,7 @@
 <div class="relative z-10 flex min-h-[calc(100vh-header-height)] items-center justify-center px-3 py-8 sm:px-4 sm:py-12" style="--header-height: 4rem;">
   <div class="max-w-md w-full">
     <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl">
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-5 sm:mb-6">Sign Up</h2>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-5 sm:mb-6">{% trans "Create Account" %}</h2>
 
       <form method="post" class="space-y-4 sm:space-y-5" id="signup-form">
         {% csrf_token %}
@@ -25,7 +25,7 @@
 
         <div>
           <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">
-            Username
+            {% trans "Username" %}
           </label>
           {{ form.username }}
           {% if form.username.errors %}
@@ -35,7 +35,7 @@
 
         <div>
           <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">
-            Email
+            {% trans "Email" %}
           </label>
           {{ form.email }}
           {% if form.email.errors %}
@@ -45,7 +45,7 @@
 
         <div>
           <label for="{{ form.phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">
-            Phone (optional)
+            {% trans "Phone (optional)" %}
           </label>
           {{ form.phone }}
           {% if form.phone.errors %}
@@ -55,7 +55,7 @@
 
         <div>
           <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">
-            Password
+            {% trans "Password" %}
           </label>
           {{ form.password1 }}
           {% if form.password1.errors %}
@@ -65,7 +65,7 @@
 
         <div>
           <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1.5">
-            Confirm Password
+            {% trans "Confirm Password" %}
           </label>
           {{ form.password2 }}
           {% if form.password2.errors %}
@@ -75,13 +75,13 @@
 
         <button type="submit"
                 class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-700 transition-colors touch-manipulation">
-          Create Account
+          {% trans "Create Account" %}
         </button>
       </form>
 
       <p class="text-center text-gray-500 text-sm sm:text-base mt-5">
-        Already have an account?
-        <a href="{% url 'accounts:login' %}" class="text-gray-900 font-medium hover:text-gray-700 transition-colors">Log in</a>
+        {% trans "Already have an account?" %}
+        <a href="{% url 'accounts:login' %}" class="text-gray-900 font-medium hover:text-gray-700 transition-colors">{% trans "Log in" %}</a>
       </p>
     </div>
   </div>

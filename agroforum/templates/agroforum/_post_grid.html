@@ -1,3 +1,4 @@
+{% load static i18n %}
 {% for post in page %}
 <article class="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col">
   {% if post.image %}
@@ -23,12 +24,12 @@
       {% endif %}
       <div class="min-w-0 flex-1">
         <p class="font-semibold text-gray-900 truncate">{{ post.author.username }}</p>
-        <p class="text-xs text-gray-500">{{ post.created_at|timesince }} ago</p>
+        <p class="text-xs text-gray-500">{{ post.created_at|timesince }} {% trans 'ago' %}</p>
       </div>
       {% if post.is_pinned %}
       <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.597 6.494L10 5l1.403 1.494 3.404.292-2.466 2.402.583 3.392-2.925-1.539-2.926 1.539.582-3.392L5.193 6.786l3.404-.292z"></path></svg>
-        Pinned
+        {% trans "Pinned" %}
       </span>
       {% endif %}
     </div>
@@ -42,16 +43,16 @@
         {% if is_following %}
         <button type="submit"
                 class="px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors"
-                aria-label="Unfollow {{ post.author.username }}">
+                aria-label="{% trans 'Unfollow' %} {{ post.author.username }}">
           <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 19V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14"></path></svg>
-          Following
+          {% trans "Following" %}
         </button>
         {% else %}
         <button type="submit"
                 class="px-4 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors"
-                aria-label="Follow {{ post.author.username }}">
+                aria-label="{% trans 'Follow' %} {{ post.author.username }}">
           <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-          Follow
+          {% trans "Follow" %}
         </button>
         {% endif %}
       </form>
@@ -72,7 +73,7 @@
               hx-target="closest .post-like-container"
               hx-swap="outerHTML"
               class="post-like-container flex items-center gap-1.5 text-gray-500 hover:text-red-500 transition-colors py-1"
-              aria-label="{% if post.user_has_liked_current %}Unlike{% else %}Like{% endif %} this post">
+              aria-label="{% if post.user_has_liked_current %}{% trans 'Unlike' %}{% else %}{% trans 'Like' %}{% endif %} {% trans 'this post' %}">
         {% if post.user_has_liked_current %}
         <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"></path></svg>
         {% else %}
@@ -89,7 +90,7 @@
 
       <span class="flex-1"></span>
 
-      <span class="text-xs text-gray-400">{{ post.view_count }} views</span>
+      <span class="text-xs text-gray-400">{{ post.view_count }} {% trans "views" %}</span>
     </div>
   </div>
 </article>
@@ -98,11 +99,11 @@
   <div class="text-center py-12">
     <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 inline-block">
       <span class="text-5xl block mb-3">🌱</span>
-      <h3 class="text-xl font-semibold text-gray-700 mb-2">No posts yet</h3>
-      <p class="text-gray-500 mb-4">Be the first to share your thoughts!</p>
+      <h3 class="text-xl font-semibold text-gray-700 mb-2">{% trans "No posts yet" %}</h3>
+      <p class="text-gray-500 mb-4">{% trans "Be the first to share your thoughts!" %}</p>
       {% if user.is_authenticated %}
       <a href="{% url 'agroforum:post_create' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
-        Create First Post
+        {% trans "Create First Post" %}
       </a>
       {% endif %}
     </div>
