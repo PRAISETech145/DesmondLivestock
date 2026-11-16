@@ -14,6 +14,7 @@ urlpatterns += i18n_patterns(
     path("", include("core.urls")),
     path("listings/", include("listings.urls")),
     path("accounts/", include("accounts.urls")),
+    path("accounts/", include("allauth.urls")),
     path("forum/", include("agroforum.urls")),
     path("people/", include("social.urls")),
     prefix_default_language=False,

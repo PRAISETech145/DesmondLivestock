@@ -74,7 +74,7 @@
         <form method="post" action="{% url 'agroforum:comment_delete' comment.pk %}" class="inline">
           {% csrf_token %}
           <button type="submit"
-                  onclick="return confirm('{% trans \"Delete this comment?\"|escapejs %}');"
+                  onclick="return confirm('{% trans 'Delete this comment?'|escapejs %}');"
                   class="text-sm text-red-600 hover:text-red-900 font-medium bg-transparent border-none p-0">
             {% trans "Delete" %}
           </button>

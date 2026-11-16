@@ -31,8 +31,17 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_htmx",
+     "anymail",
     "cloudinary",
     "cloudinary_storage",
+
+    # django-allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
+
     "accounts",
     "listings",
     "core",
@@ -51,6 +60,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "livestock_project.urls"
@@ -71,6 +81,70 @@ TEMPLATES = [
         },
     },
 ]
+
+# django-allauth configuration
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+SITE_ID = 1
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_MIN_LENGTH = 3
+ACCOUNT_USERNAME_BLACKLIST = ["admin", "administrator", "root", "api", "www", "mail", "email", "support", "help", "info", "contact", "sales", "marketing", "billing", "security", "privacy", "terms", "legal", "about", "blog", "news", "careers", "jobs", "login", "logout", "signup", "signin", "register", "password", "reset", "verify", "confirm", "activate", "deactivate", "delete", "remove", "edit", "update", "create", "new", "add", "manage", "settings", "profile", "account", "dashboard", "home", "index", "main", "default", "test", "demo", "staging", "production", "prod", "dev", "development", "local", "localhost", "127.0.0.1", "0.0.0.0"]
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "APP": {
+            "client_id": os.environ.get("GOOGLE_CLIENT_ID", ""),
+            "secret": os.environ.get("GOOGLE_CLIENT_SECRET", ""),
+            "key": "",
+        },
+    },
+    "facebook": {
+        "METHOD": "oauth2",
+        "SCOPE": ["email", "public_profile"],
+        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        "FIELDS": [
+            "id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "name",
+            "name_format",
+            "picture",
+            "short_name",
+            "email",
+        ],
+        "EXCHANGE_TOKEN": True,
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v18.0",
+        "APP": {
+            "client_id": os.environ.get("FACEBOOK_CLIENT_ID", ""),
+            "secret": os.environ.get("FACEBOOK_CLIENT_SECRET", ""),
+            "key": "",
+        },
+    },
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+LOGIN_REDIRECT_URL = "core:home"
+ACCOUNT_LOGOUT_REDIRECT_URL = "core:home"
 
 WSGI_APPLICATION = "livestock_project.wsgi.application"
 

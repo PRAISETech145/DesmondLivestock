@@ -26,9 +26,11 @@ urlpatterns = [
         template_name="accounts/password_reset_complete.html"
     ), name="password_reset_complete"),
 
-    path("verify-email/sent/", views.verify_email_sent, name="verify_email_sent"),
+    # Email verification (6-digit code)
+    path("verify-email/", views.verify_email, name="verify_email"),
+    path("verify-email/ajax/", views.verify_email_ajax, name="verify_email_ajax"),
     path("verify-email/resend/", views.resend_verification, name="resend_verification"),
-    path("verify-email/<str:token>/", views.verify_email, name="verify_email"),
+
     path("profile/", views.profile, name="profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
     path("profile/<str:username>/", views.profile, name="profile"),

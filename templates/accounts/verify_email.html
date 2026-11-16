@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Verify Email - Livestock Market{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans "Verify Email" %} - {% trans "Livestock Market" %}{% endblock %}
 
 {% block header_bg %}
 <img src="{% static 'imgs/what-is-intensive-livestock-farming.jpg' %}" alt="" class="w-full h-full object-cover opacity-40">
@@ -9,32 +9,101 @@
 {% block hero %}
 <div class="relative z-10 flex min-h-[calc(100vh-header-height)] items-center justify-center px-3 py-8 sm:px-4 sm:py-12" style="--header-height: 4rem;">
   <div class="max-w-md w-full">
-    <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl text-center">
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{% trans "Enter Verification Code" %}</h2>
+        <p class="text-gray-600 mb-4">{% trans "We've sent a 6-digit code to" %} <strong>{{ email }}</strong></p>
+        <p class="text-sm text-gray-500">{% trans "Code expires in 15 minutes" %}</p>
+      </div>
+
       {% if success %}
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-        </svg>
+      <div class="animate-slide-up">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{% trans "Email Verified!" %}</h2>
+        <p class="text-gray-600 mb-6">{{ message }}</p>
+        <a href="{% url 'accounts:login' %}" class="btn-primary w-full py-3.5 rounded-xl font-semibold text-base sm:text-lg transition-all touch-manipulation inline-block">
+          {% trans "Log In" %}
+        </a>
       </div>
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Email Verified!</h2>
-      <p class="text-gray-600 mb-6">{{ message }}</p>
-      <a href="{% url 'accounts:login' %}" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-700 transition-colors touch-manipulation inline-block">
-        Log In
-      </a>
       {% else %}
-      <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+
+      <!-- Error Messages -->
+      {% if error %}
+      <div id="error-message" class="bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-6 animate-slide-down" role="alert">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <p class="text-red-600 text-sm">{{ error }}</p>
+        </div>
+        {% if expired or max_attempts %}
+        <p class="text-red-600 text-sm mt-2">
+          <a href="{% url 'accounts:resend_verification' %}" class="font-medium underline hover:text-red-700">Request a new code</a>
+        </p>
+        {% endif %}
       </div>
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Verification Failed</h2>
-      <p class="text-gray-600 mb-6">{{ message }}</p>
-      <a href="{% url 'accounts:signup' %}" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-semibold text-base sm:text-lg hover:bg-gray-700 transition-colors touch-manipulation inline-block">
-        Sign Up Again
-      </a>
-      <p class="mt-4 text-sm text-gray-500">
-        Need a new link? <a href="{% url 'accounts:resend_verification' %}" class="text-gray-900 font-medium hover:text-gray-700">Request one here</a>
+      {% endif %}
+
+      <!-- Code Input Fields -->
+      <form method="post" id="verify-form" class="space-y-4" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="code" id="code-hidden" value="">
+
+        <div class="code-inputs-grid" role="group" aria-label="6-digit verification code">
+          {% for i in "123456" %}
+          <input type="text"
+                 class="code-input w-10 h-12 sm:w-12 sm:h-14 text-center text-2xl sm:text-3xl font-bold border-2 border-gray-200 rounded-xl focus:border-green-600 focus:ring-2 focus:ring-green-200 focus:outline-none transition-all bg-white text-gray-900"
+                 maxlength="1"
+                 inputmode="numeric"
+                 pattern="[0-9]"
+                 autocomplete="one-time-code"
+                 data-index="{{ forloop.counter }}"
+                 {% if forloop.first %}autofocus{% endif %}>
+          {% endfor %}
+        </div>
+
+        <button type="submit"
+                id="submit-btn"
+                class="btn-primary w-full py-3.5 rounded-xl font-semibold text-base sm:text-lg transition-all touch-manipulation opacity-50 cursor-not-allowed"
+                disabled>
+          {% trans "Verify Code" %}
+        </button>
+      </form>
+
+      <div class="mt-6 text-center">
+        {% if attempts_remaining is not None %}
+        <p class="text-sm text-gray-500 mb-3">{% trans "Attempts remaining:" %} <span class="font-medium text-gray-900">{{ attempts_remaining }}</span></p>
+        {% endif %}
+
+        <button type="button"
+                id="resend-btn"
+                class="text-sm text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center justify-center gap-1 mx-auto"
+                onclick="resendCode()">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <span>{% trans "Didn't receive a code? Resend" %}</span>
+        </button>
+
+        <div id="resend-countdown" class="hidden text-sm text-gray-500 mt-2">
+          {% trans "Resend available in" %} <span id="countdown-timer">60</span>s
+        </div>
+      </div>
+
+      <p class="text-center text-gray-500 text-sm sm:text-base mt-5">
+        {% trans "Changed your mind?" %}
+        <a href="{% url 'accounts:signup' %}" class="text-gray-900 font-medium hover:text-gray-700 transition-colors">{% trans "Sign up with different email" %}</a>
       </p>
+
       {% endif %}
     </div>
   </div>
@@ -42,3 +111,398 @@
 {% endblock %}
 
 {% block content %}{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Animations */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulseSlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+  }
+
+  @keyframes successPulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+
+  @keyframes errorPulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+
+  .animate-slide-up { animation: slideUp 0.5s ease-out; }
+  .animate-slide-down { animation: slideDown 0.3s ease-out; }
+  .animate-pulse-slow { animation: pulseSlow 2s ease-in-out infinite; }
+  .animate-shake { animation: shake 0.5s ease-in-out; }
+  .animate-success-pulse { animation: successPulse 0.6s ease-out; }
+  .animate-error-pulse { animation: errorPulse 0.6s ease-out; }
+
+  /* Code inputs grid */
+  .code-inputs-grid {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .code-input {
+    -webkit-text-security: disc;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', monospace;
+  }
+
+  .code-input:focus {
+    -webkit-text-security: none;
+    z-index: 1;
+  }
+
+  .code-input.filled {
+    border-color: #22c55e;
+    background-color: #f0fdf4;
+  }
+
+  .code-input.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+  }
+
+  .code-input.success {
+    border-color: #22c55e;
+    background-color: #f0fdf4;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .btn-primary:hover:not(:disabled)::before {
+    opacity: 1;
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary:not(:disabled) {
+    opacity: 1;
+    cursor: pointer;
+  }
+  .btn-primary span {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Resend button countdown */
+  #resend-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Mobile viewport fix */
+  @media (max-width: 640px) {
+    .code-inputs-grid {
+      gap: 6px;
+    }
+    .code-input {
+      width: 44px;
+      height: 52px;
+      font-size: 1.5rem;
+    }
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const inputs = document.querySelectorAll('.code-input');
+  const hiddenInput = document.getElementById('code-hidden');
+  const submitBtn = document.getElementById('submit-btn');
+  const form = document.getElementById('verify-form');
+  const resendBtn = document.getElementById('resend-btn');
+  const countdownEl = document.getElementById('countdown-timer');
+  const countdownContainer = document.getElementById('resend-countdown');
+  const errorMessage = document.getElementById('error-message');
+
+  let resendCooldown = 60;
+  let cooldownInterval = null;
+
+  // Auto-advance focus between inputs
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', function(e) {
+      // Only allow numbers
+      this.value = this.value.replace(/[^0-9]/g, '');
+
+      if (this.value) {
+        this.classList.add('filled');
+        if (index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        } else {
+          // Last input filled - check if all filled
+          checkAllFilled();
+        }
+      } else {
+        this.classList.remove('filled');
+      }
+
+      updateHiddenInput();
+    });
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !this.value && index > 0) {
+        inputs[index - 1].focus();
+      }
+      if (e.key === 'ArrowLeft' && index > 0) {
+        inputs[index - 1].focus();
+      }
+      if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+
+    // Paste handling
+    input.addEventListener('paste', function(e) {
+      e.preventDefault();
+      const pasteData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+      if (pasteData.length === 6) {
+        pasteData.split('').forEach((digit, i) => {
+          inputs[i].value = digit;
+          inputs[i].classList.add('filled');
+        });
+        updateHiddenInput();
+        checkAllFilled();
+      }
+    });
+  });
+
+  function updateHiddenInput() {
+    const code = Array.from(inputs).map(i => i.value).join('');
+    hiddenInput.value = code;
+  }
+
+  function checkAllFilled() {
+    const code = Array.from(inputs).map(i => i.value).join('');
+    if (code.length === 6) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      // Auto-submit after a brief delay
+      setTimeout(() => {
+        if (!submitBtn.disabled) {
+          form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+      }, 300);
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+  }
+
+  // Form submit with AJAX
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const code = hiddenInput.value;
+    if (code.length !== 6) return;
+
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+
+    try {
+      const response = await fetch('{% url "accounts:verify_email_ajax" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: new URLSearchParams({ code })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Success animation
+        inputs.forEach(input => {
+          input.classList.add('success', 'animate-success-pulse');
+          input.disabled = true;
+        });
+        submitBtn.innerHTML = '<svg class="w-5 h-5 mx-auto text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Verified!';
+
+        setTimeout(() => {
+          if (data.redirect_url) {
+            window.location.href = data.redirect_url;
+          }
+        }, 1000);
+      } else if (data.expired) {
+        // Code expired - show error and reload page
+        showError(data.error);
+        setTimeout(() => window.location.reload(), 2000);
+      } else if (data.max_attempts) {
+        // Max attempts reached
+        inputs.forEach(input => input.disabled = true);
+        submitBtn.disabled = true;
+        showError(data.error);
+      } else {
+        // Invalid code
+        inputs.forEach(input => {
+          input.classList.add('error', 'animate-error-pulse');
+          input.classList.remove('filled');
+        });
+        submitBtn.innerHTML = '{% trans "Verify Code" %}';
+
+        setTimeout(() => {
+          inputs.forEach(input => {
+            input.classList.remove('error', 'animate-error-pulse');
+            input.value = '';
+            input.classList.remove('filled');
+          });
+          inputs[0].focus();
+          updateHiddenInput();
+          checkAllFilled();
+        }, 600);
+
+        showError(data.error || '{% trans "Invalid code. Please try again." %}');
+
+        if (data.attempts_remaining !== undefined) {
+          updateAttemptsRemaining(data.attempts_remaining);
+        }
+      }
+    } catch (err) {
+      console.error('Verification error:', err);
+      submitBtn.innerHTML = '{% trans "Verify Code" %}';
+      showError('{% trans "Something went wrong. Please try again." %}');
+    }
+  });
+
+  function showError(message) {
+    if (errorMessage) {
+      errorMessage.querySelector('p').textContent = message;
+      errorMessage.classList.remove('hidden');
+    } else {
+      // Create error message dynamically
+      const errorDiv = document.createElement('div');
+      errorDiv.id = 'error-message';
+      errorDiv.className = 'bg-red-50 border border-red-200 rounded-xl p-3 sm:p-4 mb-6 animate-slide-down';
+      errorDiv.setAttribute('role', 'alert');
+      errorDiv.innerHTML = `
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+          <p class="text-red-600 text-sm">${message}</p>
+        </div>
+      `;
+      form.parentNode.insertBefore(errorDiv, form);
+    }
+  }
+
+  function updateAttemptsRemaining(remaining) {
+    const attemptsEl = document.querySelector('.text-sm.text-gray-500.mb-3');
+    if (attemptsEl) {
+      attemptsEl.innerHTML = '{% trans "Attempts remaining:" %} <span class="font-medium text-gray-900">' + remaining + '</span>';
+    }
+  }
+
+  // Resend code with countdown
+  function resendCode() {
+    resendBtn.disabled = true;
+    resendBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
+
+    fetch('{% url "accounts:resend_verification" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+      body: new URLSearchParams({})
+    })
+    .then(response => {
+      if (response.redirected) {
+        window.location.reload();
+      } else {
+        startCountdown();
+      }
+    })
+    .catch(err => {
+      console.error('Resend error:', err);
+      resendBtn.disabled = false;
+      resendBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Didn\'t receive a code? Resend';
+    });
+  }
+
+  function startCountdown() {
+    resendCooldown = 60;
+    resendBtn.disabled = true;
+    resendBtn.classList.add('hidden');
+    countdownContainer.classList.remove('hidden');
+
+    cooldownInterval = setInterval(() => {
+      resendCooldown--;
+      countdownEl.textContent = resendCooldown;
+
+      if (resendCooldown <= 0) {
+        clearInterval(cooldownInterval);
+        countdownContainer.classList.add('hidden');
+        resendBtn.classList.remove('hidden');
+        resendBtn.disabled = false;
+        resendBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Didn\'t receive a code? Resend';
+      }
+    }, 1000);
+  }
+
+  // Initialize countdown if needed (e.g., page was just loaded after resend)
+  {% if request.GET.resent %}
+  startCountdown();
+  {% endif %}
+
+  // Focus first input on load
+  if (inputs[0] && !document.querySelector('.code-input.filled')) {
+    inputs[0].focus();
+  }
+});
+</script>
+{% endblock %}
