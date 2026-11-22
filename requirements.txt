@@ -13,3 +13,4 @@ django-allauth>=0.51
 django-anymail>=8.0
 whitenoise==6.7.0
 PyJWT>=2.8
+#
